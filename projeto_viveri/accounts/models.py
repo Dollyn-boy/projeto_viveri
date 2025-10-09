@@ -1,63 +1,85 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
+from datetime import date
 
-# Create your models here.
-
-# 1 - User model
-  # id 
-  # nome_completo
-  # email
-  # senha
-  # status_conta
-  # codigo_verificacao
-  # flag_userPF
-  # flag_userPJ
-class User(models.Model):
-    id = models.AutoField(primary_key=True)
-    nome_completo = models.CharField(max_length=255)
+# ABSTRACT USER JÁ VEM COM OS CAMPOS ID, NOME COMPLETO(first name e last name) E SENHA, POR ISSO FORAM REMOVIDOS AQUI
+class Usuario(AbstractUser):
     email = models.EmailField(unique=True)
-    senha = models.CharField(max_length=255)
     status_conta = models.BooleanField(default=False)
-    codigo_verificacao = models.CharField(max_length=100, null=True, blank=True)
+    codigo_verificacao = models.CharField(max_length=6, null=True, blank=True)
     flag_userPF = models.BooleanField(default=False)
     flag_userPJ = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.nome_completo
-
     
+    
+    def str(self):
+        return self.first_name or self.email
 
-# 2 - Pessoa fisica
-  # id_pessoa_fisica
-  # id_user (FK)
-  # cpf
-  # data_nascimento
+    def clean(self):
+        if self.flag_userPF and self.flag_userPJ:
+            raise ValidationError("Usuário não pode ser PF e PJ ao mesmo tempo")
+        
+        super().clean()
+
 class PessoaFisica(models.Model):
-    id_pessoa_fisica = models.AutoField(primary_key=True)
-    id_user = models.OneToOneField(User, on_delete=models.CASCADE)
-    cpf = models.CharField(max_length=14, unique=True)
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name="pessoa_fisica")
+    cpf = models.CharField(max_length=11, unique=True)
     data_nascimento = models.DateField()
 
-    def __str__(self):
-        return self.id_user.nome_completo
+    def str(self):
+        return f"{self.usuario.nome_completo}"
+    
+    def clean(self):
+        if self.data_nascimento >= date.today():
+            raise ValidationError("Data de nascimento inválida")
+        
+        if len(self.cpf) != 11:
+            raise ValidationError("CPF deve ter 11 dígitos")
+        
+        super().clean()
 
-# 3 - Pessoa juridica
-  # id_pessoa_juridica
-  # id_user (FK)
-  # cnpj
-  # razao_social
-  # nome_fantasia
-  # endereco_comercial
-  # documento_verificado 
-  # selo_verificado
+
 class PessoaJuridica(models.Model):
-    id_pessoa_juridica = models.AutoField(primary_key=True)
-    id_user = models.OneToOneField(User, on_delete=models.CASCADE)
-    cnpj = models.CharField(max_length=18, unique=True)
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name="pessoa_juridica")
+    cnpj = models.CharField(max_length=14, unique=True)
     razao_social = models.CharField(max_length=255)
-    nome_fantasia = models.CharField(max_length=255)
-    endereco_comercial = models.TextField()
-    documento_verificado = models.BooleanField(default=False)
-    selo_verificado = models.BooleanField(default=False)
+    nome_fantasia = models.CharField(max_length=255, null=True, blank=True)
+    endereco_comercial = models.CharField(max_length=255)
+    documentacao_verificada = models.BooleanField(default=False)
+    selo_verificacao = models.BooleanField(default=False)
 
-    def __str__(self):
-        return self.nome_fantasia
+    def str(self):
+        return f"{self.razao_social}"
+    
+    def clean(self):
+        if len(self.cnpj) != 14:
+            raise ValidationError("CNPJ deve ter 14 dígitos")
+        
+        super().clean()
+
+
+
+class SegurancaModeracao(models.Model):
+    
+    class StatusDenuncia(models.Model):
+        ABERTA = 'ABERTA', 'Aberta'
+        EM_ANALISE = 'EM_ANALISE', 'Em Análise'
+        RESOLVIDA = 'RESOLVIDA', 'Resolvida'
+        REJEITADA = 'REJEITADA', 'Rejeitada'
+    
+    usuario_denunciante = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="denuncias_enviadas")
+    usuario_denunciado = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="denuncias_recebidas")
+    tipo_denuncia = models.CharField(max_length=100)
+    descricao = models.TextField()
+    status_denuncia = models.CharField(max_length=50, choices=StatusDenuncia.choices, default=StatusDenuncia.ABERTA)
+    data_denuncia = models.DateTimeField(auto_now_add=True)
+
+    def str(self):
+        return f"Denúncia {self.id} - {self.tipo_denuncia}"
+    
+    
+    def clean(self):
+        if self.usuario_denunciado == self.usuario_denunciante:
+            raise ValidationError("Um usuário não pode denunciar sua própria conta")
+        
+        super().clean()
