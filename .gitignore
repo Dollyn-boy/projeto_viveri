@@ -1,2 +1,32 @@
 projeto_viveri/venv/
-projeto_viveri/.venv/
+
+# Ambiente virtual
+venv/
+env/
+*.venv
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Banco de dados
+*.sqlite3
+*.db
+
+# Arquivos de log
+*.log
+
+# Django
+/staticfiles/
+/media/
+/*.pot
+*.pyc
+
+# VS Code
+.vscode/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db

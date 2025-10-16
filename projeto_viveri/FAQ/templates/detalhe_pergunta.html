@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes da Pergunta</title>
+</head>
+<body>
+    <h1>{{ pergunta.titulo }}</h1>
+    <p>{{ pergunta.descricao }}</p>
+    
+    <h2>Respostas</h2>
+
+    {% if respostas %}
+        <ul>
+            {% for resposta in respostas %}
+                <li>
+                    <p>{{ resposta.texto }}</p>
+                    <small>Enviada em {{ resposta.data_criacao }}</small>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Ainda não há respostas para esta pergunta.</p>
+    {% endif %}
+
+</body>
+</html>
