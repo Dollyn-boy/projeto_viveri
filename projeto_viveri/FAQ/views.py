@@ -65,7 +65,7 @@ def atualizar_pergunta(request, id_p):
         pergunta.save() 
         return redirect("listar_perguntas")
 
-    return render(request, "app/editar_pergunta.html", {"pergunta": pergunta})
+    return render(request, "editar_pergunta.html", {"pergunta": pergunta})
 
 
 
