@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, JsonResponse
+
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
-
-from .models import Usuario, SegurancaModeracao
+from .models import SegurancaModeracao
+from .models import Usuario
 
 # ---------------------------
 # CRUD Usuário
@@ -45,33 +46,36 @@ def deletar_usuario(request, user_id):
 # Segurança e Moderação
 # ---------------------------
 
-# CREATE
+# create
 class SegurancaModeracaoCreateView(CreateView):
     model = SegurancaModeracao
-    fields = ['usuario_denunciado', 'tipo_denuncia', 'descricao']
+    fields = ['usuario_denunciado', 'tipo_denuncia','descricao']
 
+    
     def form_valid(self, form):
         form.instance.usuario_denunciante = self.request.user
         return super().form_valid(form)
-
+    
+    #  Retorna a URL de detalhe com o PK do objeto recÃ©m-criado
     def get_success_url(self):
         return reverse_lazy('detalhe-denuncia', kwargs={'pk': self.object.pk})
-
-# READ
+    
+# read
 class SegurancaModeracaoReadView(DetailView):
     model = SegurancaModeracao
     context_object_name = 'denuncia'
-
-# UPDATE
+    
+# update
 class SegurancaModeracaoUpdateView(UpdateView):
     model = SegurancaModeracao
     fields = ['usuario_denunciado', 'tipo_denuncia', 'descricao', 'status_denuncia']
 
+
+   # Retorna a URL de detalhe com o PK do objeto atualizado
     def get_success_url(self):
         return reverse_lazy('detalhe-denuncia', kwargs={'pk': self.object.pk})
-
-# DELETE
-class SegurancaModeracaoDeleteView(DeleteView):
+# delete
+class SegurancaModeracaoDeleteView(DeleteView): 
     model = SegurancaModeracao
-    success_url = reverse_lazy('denuncia-lista')
+    success_url = reverse_lazy('denuncia-lista') 
 
