@@ -61,7 +61,7 @@ class PessoaJuridica(models.Model):
 
 class SegurancaModeracao(models.Model):
     
-    class StatusDenuncia(models.Model):
+    class StatusDenuncia(models.TextChoices):
         ABERTA = 'ABERTA', 'Aberta'
         EM_ANALISE = 'EM_ANALISE', 'Em Análise'
         RESOLVIDA = 'RESOLVIDA', 'Resolvida'
