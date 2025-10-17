@@ -2,7 +2,7 @@ from django.urls import path
 
 from . import views
 from django.urls import path
-from .views import SegurancaModeracaoCreateView, SegurancaModeracaoReadView, SegurancaModeracaoUpdateView, SegurancaModeracaoDeleteView,SegurancaModeracaoListView
+from .views import SegurancaModeracaoCreateView, SegurancaModeracaoReadView, SegurancaModeracaoUpdateView, SegurancaModeracaoDeleteView
 
 
 urlpatterns = [
@@ -14,7 +14,7 @@ urlpatterns = [
 
   
      # URL para listar todas as denúncias
-    path('denuncias/', SegurancaModeracaoListView.as_view(), name='denuncia-lista'),
+    # path('denuncias/', SegurancaModeracaoListView.as_view(), name='denuncia-lista'),
     # URL para criar uma denúncia
     path('denuncia/criar/', SegurancaModeracaoCreateView.as_view(), name='criar-denuncia'),
 
