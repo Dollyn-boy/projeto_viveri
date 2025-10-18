@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
+
 from datetime import date
 
 # ABSTRACT USER JÁ VEM COM OS CAMPOS ID, NOME COMPLETO(first name e last name) E SENHA, POR ISSO FORAM REMOVIDOS AQUI
@@ -27,7 +28,7 @@ class PessoaFisica(models.Model):
     data_nascimento = models.DateField()
 
     def str(self):
-        return f"{self.usuario.nome_completo}"
+        return f"{self.usuario.get_full_name}"
     
     def clean(self):
         if self.data_nascimento >= date.today():
