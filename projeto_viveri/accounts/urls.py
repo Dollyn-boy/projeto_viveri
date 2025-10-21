@@ -7,10 +7,12 @@ from .views import SegurancaModeracaoCreateView, SegurancaModeracaoReadView, Seg
 
 urlpatterns = [
     # Usuário CRUD
-    path('', views.usuario_list, name='usuario_list'),
+    path('', views.usuario_list, name='usuario_list'), 
     path('adicionar/', views.adicionar_usuario, name='adicionar_usuario'),
     path('atualizar/<int:user_id>/', views.atualizar_usuario, name='atualizar_usuario'),
+    path('<int:user_id>/', views.detalhar_usuario, name='detalhar_usuario'),
     path('deletar/<int:user_id>/', views.deletar_usuario, name='deletar_usuario'),
+
 
   
      # URL para listar todas as denúncias

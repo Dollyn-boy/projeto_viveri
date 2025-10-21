@@ -115,11 +115,40 @@ def atualizar_usuario(request,user_id):
     '''
 
 # DELETE - Deletar um usuário
+@csrf_exempt
 def deletar_usuario(request, user_id):
-    usuario = get_object_or_404(Usuario, id=user_id)
-    nome_usuario = usuario.get_full_name()
-    usuario.delete()
-    return HttpResponse(f"Usuário '{nome_usuario}' deletado com sucesso!")
+    if request.method == "DELETE":
+        usuario = Usuario.objects.filter(pk=user_id).first()
+        if usuario is None:
+            return JsonResponse({"error": "Usuário não encontrado"}, status=404)
+        nome_usuario = usuario.get_full_name()
+        usuario.delete()
+        return JsonResponse({"message": f"Usuário {nome_usuario} deletado com sucesso"})
+    return JsonResponse({"error": "Requisição inválida"}, status=405)
+
+
+def detalhar_usuario(request, user_id):
+    if request.method == 'GET':
+        try:
+            usuario = get_object_or_404(Usuario, id=user_id)
+            data = {
+                'id': usuario.id,
+                'username': usuario.username,
+                'email': usuario.email,
+                'first_name': usuario.first_name,
+                'last_name': usuario.last_name,
+                'status_conta': usuario.status_conta,
+                'flag_userPF': usuario.flag_userPF,
+                'flag_userPJ': usuario.flag_userPJ,
+            }
+            return JsonResponse(data, status=200)
+        except Usuario.DoesNotExist: # This case is handled by get_object_or_404, but explicit check is fine
+             return JsonResponse({"error": "Usuário não encontrado"}, status=404)
+        except Exception as e:
+            return JsonResponse({"error": f"Ocorreu um erro: {str(e)}"}, status=500)
+    else:
+        return JsonResponse({"error": "Requisição inválida, deve ser GET"}, status=405)
+
 
 # ---------------------------
 # Segurança e Moderação
