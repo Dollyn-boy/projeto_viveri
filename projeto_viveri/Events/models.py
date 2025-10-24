@@ -21,7 +21,7 @@ class Eventos(models.Model):
     def __str__(self):
         return self.nome
 
-
+# "oi"
 
 class Categoria(models.Model):
     id_categoria = models.AutoField(primary_key=True)
