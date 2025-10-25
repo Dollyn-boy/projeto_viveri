@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'FAQ',
     'accounts',
     'Events',
+    'rest_framework',
+    
 ]
 
 AUTH_USER_MODEL = 'accounts.Usuario'

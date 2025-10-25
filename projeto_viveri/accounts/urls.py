@@ -1,29 +1,23 @@
-from django.urls import path
+from django.urls import include
+from rest_framework.routers import DefaultRouter
+from .views import (
+    UsuarioViewSet,
+    PessoaFisicaViewSet,
+    PessoaJuridicaViewSet, 
+    SegurancaModeracaoViewSet
+)
 
-from . import views
-from django.urls import path
-from .views import SegurancaModeracaoCreateView, SegurancaModeracaoReadView, SegurancaModeracaoUpdateView, SegurancaModeracaoDeleteView
 
+router = DefaultRouter() 
 
+#Registro dos ViewSets
+router.register('usuarios', UsuarioViewSet)
+router.register('pessoas-fisicas', PessoaFisicaViewSet)
+router.register('pessoas-juridicas', PessoaJuridicaViewSet) 
+router.register('moderacao', SegurancaModeracaoViewSet) 
+
+#Mapeamento
 urlpatterns = [
-    # Usuário CRUD
-    path('', views.usuario_list, name='usuario_list'),
-    path('adicionar/', views.adicionar_usuario, name='adicionar_usuario'),
-    path('atualizar/<int:user_id>/', views.atualizar_usuario, name='atualizar_usuario'),
-    path('deletar/<int:user_id>/', views.deletar_usuario, name='deletar_usuario'),
-
-  
-     # URL para listar todas as denúncias
-    # path('denuncias/', SegurancaModeracaoListView.as_view(), name='denuncia-lista'),
-    # URL para criar uma denúncia
-    path('denuncia/criar/', SegurancaModeracaoCreateView.as_view(), name='criar-denuncia'),
-
-    # URL para ver os detalhes de uma denúncia
-    path('denuncia/<int:pk>/', SegurancaModeracaoReadView.as_view(), name='detalhe-denuncia'),
-    
-    # URL para editar uma denúncia. O 'editar/' no final evita conflito com a URL de detalhes.
-    path('denuncia/<int:pk>/editar/', SegurancaModeracaoUpdateView.as_view(), name='atualizar-denuncia'),
-    
-    # URL para deletar uma denúncia
-    path('denuncia/<int:pk>/deletar/', SegurancaModeracaoDeleteView.as_view(), name='deletar-denuncia'),
+   # Inclui todas as rotas geradas pelo router
+   path('', include(router.urls)), 
 ]
