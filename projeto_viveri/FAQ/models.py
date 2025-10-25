@@ -4,25 +4,22 @@ from Events.models import Eventos
 
 
 class Pergunta(models.Model):
-    txt = models.TextField()
+    texto = models.TextField()
     data = models.DateTimeField(auto_now_add=True)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     evento = models.ForeignKey(Eventos, on_delete=models.CASCADE)
 
 
-
 class Resposta(models.Model):
-    txt = models.TextField()
+    texto = models.TextField()
     data = models.DateTimeField(auto_now_add=True)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     pergunta = models.ForeignKey(Pergunta, on_delete=models.CASCADE)
 
 
-
 class TipoVoto(models.TextChoices):
     UP = 'UP', 'Upvote'
     DOWN = 'DOWN', 'Downvote'
-
 
 class Voto(models.Model):
     tipo = models.CharField(max_length=5, choices=TipoVoto.choices)
@@ -44,7 +41,7 @@ class TipoNotificacao(models.TextChoices):
 
 class Notificacao(models.Model):
     tipo = models.CharField(max_length=20, choices=TipoNotificacao.choices)
-    conteudo = models.TextField()
+    mensagem = models.TextField()
     data = models.DateTimeField(auto_now_add=True)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     evento = models.ForeignKey(Eventos, on_delete=models.CASCADE)
