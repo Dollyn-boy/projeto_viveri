@@ -1,8 +1,6 @@
 from django.db import models
 from accounts.models import Usuario
 
-
-
 class Categoria(models.Model):
     id_categoria = models.IntegerField(primary_key=True)
     nome = models.CharField(max_length=50)
@@ -32,7 +30,7 @@ class Local(models.Model):
 class Eventos(models.Model):
     id_evento = models.AutoField(primary_key=True)
     nome = models.CharField(max_length=100)
-    descricao = models.CharField(max_length=1000)
+    descricao = models.TextField(default='')
     data = models.DateTimeField()
     link = models.URLField(max_length=200)
     local = models.ForeignKey(Local, on_delete=models.CASCADE, related_name='eventos')
@@ -50,3 +48,4 @@ class Reserva(models.Model):
     evento = models.ForeignKey(Eventos, on_delete=models.CASCADE)
     preco = models.DecimalField(max_digits=10, decimal_places=6, default=0)
     status = models.CharField(max_length=50, default=None)
+    data_reserva = models.DateTimeField(auto_now_add=True)
