@@ -38,7 +38,7 @@ class Local(models.Model):
 class Eventos(models.Model):
     id_evento = models.AutoField(primary_key=True)
     nome = models.CharField(max_length=100)
-    descricao = models.CharField(max_length=1000)
+    descricao = models.TextField(default='')
     data = models.DateTimeField()
     link = models.URLField(max_length=200)
     local = models.ForeignKey(Local, on_delete=models.CASCADE, related_name='eventos')

@@ -1,5 +1,6 @@
-from django.shortcuts import redirect, get_object_or_404
-from django.http import JsonResponse
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
 from .models import Local, Eventos, Reserva, Categoria
 from datetime import datetime
 from .serializer import EventosSerializer, LocalSerializer, CategoriaSerializer, ReservaSerializer
