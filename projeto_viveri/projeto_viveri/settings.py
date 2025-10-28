@@ -40,7 +40,13 @@ INSTALLED_APPS = [
     'FAQ',
     'accounts',
     'Events',
+    'rest_framework',
+    'rest_framework_simplejwt',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',)}
 
 AUTH_USER_MODEL = 'accounts.Usuario'
 
