@@ -10,8 +10,20 @@ class UsuarioSerializer(serializers.ModelSerializer):
         model = Usuario
         # Lista de campos que vão ser inclúidos na API
         fields = '__all__'
-        
-        read_only_fields = ['date_joined']
+        #campos inalteraveis pelo usuario cmum
+        read_only_fields = [
+                'id',
+                'is_staff',
+                'is_superuser',
+                'is_active',
+                'status_conta',
+                'last_login',
+                'date_joined',
+            ]
+        #campos q a api n manda
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
         
     # Cria usuário com senha hasheada
     def create(self, validated_data):
@@ -64,3 +76,7 @@ class SegurancaModeracaoSerializer(serializers.ModelSerializer):
             'descricao', 'status_denuncia', 'data_denuncia'
         ]
         read_only_fields = ['data_denuncia']
+        
+class LoginSerializer(serializers.Serializer):
+    email = serializers.CharField()
+    password = serializers.CharField()

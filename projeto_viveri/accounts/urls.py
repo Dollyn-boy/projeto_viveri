@@ -1,4 +1,4 @@
-from django.urls import include
+from django.urls import path,include
 from rest_framework.routers import DefaultRouter
 from .views import (
     UsuarioViewSet,
@@ -6,6 +6,7 @@ from .views import (
     PessoaJuridicaViewSet, 
     SegurancaModeracaoViewSet
 )
+
 
 
 router = DefaultRouter() 

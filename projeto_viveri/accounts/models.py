@@ -27,7 +27,7 @@ class PessoaFisica(models.Model):
     data_nascimento = models.DateField()
 
     def str(self):
-        return f"{self.usuario.nome_completo}"
+        return f"{self.usuario.first_name +  " " + self.usuario.last_name }"
     
     def clean(self):
         if self.data_nascimento >= date.today():
@@ -76,7 +76,7 @@ class SegurancaModeracao(models.Model):
 
     def str(self):
         return f"Denúncia {self.id} - {self.tipo_denuncia}"
-    
+        #talvez seja self.pk mas vou deixar pra alguem testar dps
     
     def clean(self):
         if self.usuario_denunciado == self.usuario_denunciante:
