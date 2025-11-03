@@ -19,7 +19,7 @@ class Categoria(models.Model):
 class Local(models.Model):
     id_local = models.AutoField(primary_key=True)
     nome = models.CharField(max_length=150, default='sem nome')
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='locais',null=True, blank=True  )
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='usuario_local',null=True, blank=True  )
     capacidade = models.DecimalField(max_digits=10, decimal_places=0, default=0)
     endereco = models.TextField(default='')
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
@@ -41,8 +41,8 @@ class Eventos(models.Model):
     descricao = models.TextField(default='')
     data = models.DateTimeField()
     link = models.URLField(max_length=200)
-    local = models.ForeignKey(Local, on_delete=models.CASCADE, related_name='eventos')
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='eventos')
+    local = models.ForeignKey(Local, on_delete=models.CASCADE, related_name='local_eventos')
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='usuario_eventos')
     
     def __str__(self):
         return self.nome

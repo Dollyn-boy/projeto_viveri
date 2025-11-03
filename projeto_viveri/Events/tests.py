@@ -1,5 +1,5 @@
 from django.test import TestCase
-fromimport requests
+#from .views import requests
 
 from .models import Local, Eventos, Reserva, Categoria
 
@@ -74,7 +74,7 @@ def testar_deletar_(evento_id):
     print_response(response)
 
 
-if _name_ == "_main_":
+if __name__ == "_main_":
     print("\n🚀 Iniciando testes da API de eventos...\n")
 
     evento_id = testar_adicionar_()
