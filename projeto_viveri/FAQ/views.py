@@ -2,9 +2,32 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework import viewsets
+from .serializers import *
+from rest_framework.permissions import IsAuthenticated
+from .permissions import *
 
 
 
+class PerguntaViewSet(viewsets.ModelViewSet):
+    queryset = Pergunta.objects.all()
+    serializer_class = PeguntaSerializer
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(usuario=self.request.user)
+
+
+class RespostaViewSet(viewsets.ModelViewSet):
+    queryset = Resposta.objects.all()
+    serializer_class = RespostaSerializer
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+    
+    def perform_create(self, serializer):
+        serializer.save(usuario=self.request.user)
+
+
+"""
 def listar_perguntas(request):
     perguntas = Pergunta.objects.all()
     
@@ -81,4 +104,4 @@ def atualizar_pergunta(request, id_p):
         pergunta.save()
         return JsonResponse({"status": "ok", "mensagem": "Pergunta atualizada com sucesso"})
     return JsonResponse({"erro": "Método não permitido"}, status=405)
-
+"""
