@@ -25,6 +25,7 @@ class PerguntaSerializer(serializers.ModelSerializer):
     usuario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all())
     evento = serializers.PrimaryKeyRelatedField(queryset=Eventos.objects.all())
 
+class PeguntaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pergunta
         fields = 'id', 'texto', 'data', 'usuario', 'evento'
