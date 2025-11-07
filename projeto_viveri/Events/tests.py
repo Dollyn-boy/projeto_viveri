@@ -3,6 +3,7 @@ from datetime import datetime
 
 BASE_URL_LOCAL = "http://127.0.0.1:8000/local/"
 BASE_URL_EVENTO = "http://127.0.0.1:8000/eventos/"
+BASE_URL_RESERVA = "http://127.0.0.1:8000/reservas/"
 
 def print_response(response):
     """Imprime informações legíveis sobre a resposta HTTP"""
@@ -86,7 +87,7 @@ def testar_adicionar_evento(local_id):
         "data": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
         "link": "http://exemplo.com/show",
         "local": local_id,
-        "categoria": 1,  # Ajuste para um ID de categoria válido
+        "usuario": 1,
     }
     print("Teste: adicionar evento")
     response = requests.post(url, json=data)
@@ -119,7 +120,7 @@ def testar_atualizar_evento(evento_id, local_id):
         "data": "2025-12-31T19:00:00",
         "link": "http://exemplo.com/atualizado",
         "local": local_id,
-        "categoria": 1
+        "usuario": 1,
     }
     print("Teste: atualizar evento")
     response = requests.put(url, json=data)
@@ -135,11 +136,68 @@ def testar_deletar_evento(evento_id):
 
 
 # ==================================================
+# ===============  TESTES DE RESERVA  ==============
+# ==================================================
+
+def testar_adicionar_reserva(evento_id):
+    """Cria uma nova reserva vinculada a um evento"""
+    url = BASE_URL_RESERVA + "adicionar/"
+    data = {
+        "usuario": 1,          # ID de usuário existente
+        "evento": evento_id,   # Evento recém-criado
+        "preco": 120.00,
+        "status": "confirmada"
+    }
+    print("Teste: adicionar reserva")
+    response = requests.post(url, json=data)
+    print_response(response)
+    return response.json().get("id_reserva") if response.ok else None
+
+
+def testar_listar_reservas():
+    """Lista todas as reservas"""
+    url = BASE_URL_RESERVA
+    print("Teste: listar reservas")
+    response = requests.get(url)
+    print_response(response)
+
+
+def testar_detalhar_reserva(reserva_id):
+    """Obtém detalhes de uma reserva"""
+    url = BASE_URL_RESERVA + f"detalhar/{reserva_id}/"
+    print("Teste: detalhar reserva")
+    response = requests.get(url)
+    print_response(response)
+
+
+def testar_atualizar_reserva(reserva_id, evento_id):
+    """Atualiza uma reserva"""
+    url = BASE_URL_RESERVA + f"atualizar/{reserva_id}/"
+    data = {
+        "usuario": 1,
+        "evento": evento_id,
+        "preco": 150.00,
+        "status": "alterada"
+    }
+    print("Teste: atualizar reserva")
+    response = requests.put(url, json=data)
+    print_response(response)
+
+
+def testar_deletar_reserva(reserva_id):
+    """Exclui uma reserva"""
+    url = BASE_URL_RESERVA + f"deletar/{reserva_id}/"
+    print("Teste: deletar reserva")
+    response = requests.delete(url)
+    print_response(response)
+
+
+# ==================================================
 # ================== EXECUÇÃO ======================
 # ==================================================
 
 if __name__ == "__main__":
-    print("\n🚀 Iniciando testes CRUD de Local e Evento...\n")
+    print("Iniciando testes CRUD de Local, Evento e Reserva...\n")
 
     # Testes de LOCAL
     local_id = testar_adicionar_local()
@@ -147,15 +205,28 @@ if __name__ == "__main__":
     if local_id:
         testar_detalhar_local(local_id)
         testar_atualizar_local(local_id)
-        testar_deletar_local(local_id)
     else:
-        print("Falha ao criar local. Pulando testes de evento.")
+        print("Falha ao criar local. Pulando testes de evento/reserva.")
+        exit()
 
-    # Testes de EVENTO (se local criado)
-    if local_id:
-        evento_id = testar_adicionar_evento(local_id)
-        testar_listar_eventos()
-        if evento_id:
-            testar_detalhar_evento(evento_id)
-            testar_atualizar_evento(evento_id, local_id)
-            testar_deletar_evento(evento_id)
+    # Testes de EVENTO
+    evento_id = testar_adicionar_evento(local_id)
+    testar_listar_eventos()
+    if evento_id:
+        testar_detalhar_evento(evento_id)
+        testar_atualizar_evento(evento_id, local_id)
+    else:
+        print("Falha ao criar evento. Pulando testes de reserva.")
+        exit()
+
+    # Testes de RESERVA
+    reserva_id = testar_adicionar_reserva(evento_id)
+    testar_listar_reservas()
+    if reserva_id:
+        testar_detalhar_reserva(reserva_id)
+        testar_atualizar_reserva(reserva_id, evento_id)
+        testar_deletar_reserva(reserva_id)
+
+    # Limpeza final
+    testar_deletar_evento(evento_id)
+    testar_deletar_local(local_id)
