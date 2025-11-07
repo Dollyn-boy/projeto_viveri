@@ -1,6 +1,13 @@
 from rest_framework import serializers
 from .models import Usuario, PessoaFisica, PessoaJuridica, SegurancaModeracao
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth import get_user_model
+import random
+from django.core.mail import send_mail
+
+User = get_user_model()
+
+
 
 class UsuarioSerializer(serializers.ModelSerializer):
     pessoa_fisica = serializers.PrimaryKeyRelatedField(read_only=True)
@@ -80,3 +87,52 @@ class SegurancaModeracaoSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     email = serializers.CharField()
     password = serializers.CharField()
+
+
+class ForgotPasswordSerializer(serializers.Serializer):
+   
+    email = serializers.EmailField()
+
+    def validate_email(self, value):
+        if not User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Email não encontrado.")
+        return value
+    
+
+    def save(self):
+        email = self.validated_data['email']
+        user = User.objects.get(email=email)
+        codigo  = str(random.randint(100000, 999999))
+        user.codigo_verificacao = codigo
+        user.save()
+
+        send_mail(
+            'Recuperacao de senha',
+            f'Seu codigo de recuperação é {codigo}',
+            'noreply@meusite.com',
+            [email],
+        )
+
+        return user
+    
+
+
+class VerifyCodeSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    codigo = serializers.CharField(max_length=6)
+    nova_senha = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        try:
+            user = User.objects.get(email=data['email'], codigo_verificacao=data['codigo'])
+        except User.DoesNotExist:
+            raise serializers.ValidationError("Código inválido ou e-mail incorreto.")
+        data['user'] = user
+        return data
+
+    def save(self):
+        user = self.validated_data['user']
+        user.set_password(self.validated_data['nova_senha'])
+        user.codigo = None
+        user.save()
+        return user

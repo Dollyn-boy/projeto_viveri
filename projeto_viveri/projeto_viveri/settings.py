@@ -16,6 +16,11 @@ from datetime import timedelta
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+# Configuração de e-mail para ambiente de desenvolvimento
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = "no-reply@viveri.local"
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 

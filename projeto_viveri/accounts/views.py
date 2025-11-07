@@ -1,12 +1,13 @@
 from rest_framework import viewsets, status
 from .models import Usuario, PessoaFisica, PessoaJuridica, SegurancaModeracao
-from .serializers import UsuarioSerializer, PessoaFisicaSerializer, PessoaJuridicaSerializer, SegurancaModeracaoSerializer, LoginSerializer
+from .serializers import ForgotPasswordSerializer, UsuarioSerializer, PessoaFisicaSerializer, PessoaJuridicaSerializer, SegurancaModeracaoSerializer, LoginSerializer, VerifyCodeSerializer
 from rest_framework.permissions import IsAuthenticated,IsAdminUser ,AllowAny
 from rest_framework.permissions import BasePermission
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
+from rest_framework.views import APIView
 
 
 class IsSelf(BasePermission):
@@ -97,3 +98,21 @@ class SegurancaModeracaoViewSet(viewsets.ModelViewSet):
 
     serializer_class = SegurancaModeracaoSerializer
 
+
+
+class ForgotPasswordAPIView(APIView):
+    def post(self, request):
+        serializer = ForgotPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Código enviado para o e-mail."}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class VerifyCodeAPIView(APIView):
+    def post(self, request):
+        serializer = VerifyCodeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Senha redefinida com sucesso."}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
