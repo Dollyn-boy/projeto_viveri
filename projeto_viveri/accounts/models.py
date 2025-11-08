@@ -10,6 +10,9 @@ class Usuario(AbstractUser):
     codigo_verificacao = models.CharField(max_length=6, null=True, blank=True)
     flag_userPF = models.BooleanField(default=False)
     flag_userPJ = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['id']
     
     
     def str(self):
@@ -25,6 +28,9 @@ class PessoaFisica(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name="pessoa_fisica")
     cpf = models.CharField(max_length=11, unique=True)
     data_nascimento = models.DateField()
+
+    class Meta:
+        ordering = ['id']
 
     def str(self):
         return f"{self.usuario.first_name +  " " + self.usuario.last_name }"
@@ -47,6 +53,9 @@ class PessoaJuridica(models.Model):
     endereco_comercial = models.CharField(max_length=255)
     documentacao_verificada = models.BooleanField(default=False)
     selo_verificacao = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['id']
 
     def str(self):
         return f"{self.razao_social}"
@@ -73,6 +82,9 @@ class SegurancaModeracao(models.Model):
     descricao = models.TextField()
     status_denuncia = models.CharField(max_length=50, choices=StatusDenuncia.choices, default=StatusDenuncia.ABERTA)
     data_denuncia = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['id']
 
     def str(self):
         return f"Denúncia {self.id} - {self.tipo_denuncia}"

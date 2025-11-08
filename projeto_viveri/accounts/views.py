@@ -1,4 +1,5 @@
 from rest_framework import viewsets, status
+from .pagination import StandardResultsSetPagination
 from .models import Usuario, PessoaFisica, PessoaJuridica, SegurancaModeracao
 from .serializers import ForgotPasswordSerializer, UsuarioSerializer, PessoaFisicaSerializer, PessoaJuridicaSerializer, SegurancaModeracaoSerializer, LoginSerializer, VerifyCodeSerializer
 from rest_framework.permissions import IsAuthenticated,IsAdminUser ,AllowAny
@@ -30,6 +31,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
 
     serializer_class = UsuarioSerializer
+    pagination_class = StandardResultsSetPagination
     
     def get_permissions(self):
         if self.action in  ['create','login']:
@@ -39,7 +41,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
             permission_classes = [IsAdminUser]
         elif self.action in ['retrieve', 'update', 'partial_update', 'destroy']:
             #so usuarios autenticados que são eles mesmos
-            permission_classes = [IsAuthenticated , IsSelf]
+            permission_classes = [IsAuthenticated ,IsAdminUser,  IsSelf]
         else:
             #por enquanto qualquer outra acao é so de admin
             permission_classes = [IsAdminUser]
@@ -83,6 +85,7 @@ class PessoaFisicaViewSet(viewsets.ModelViewSet):
     queryset = PessoaFisica.objects.all()
     
     serializer_class = PessoaFisicaSerializer
+    pagination_class = StandardResultsSetPagination
     
 
 
@@ -90,6 +93,7 @@ class PessoaJuridicaViewSet(viewsets.ModelViewSet):
     queryset = PessoaJuridica.objects.all()
 
     serializer_class = PessoaJuridicaSerializer
+    pagination_class = StandardResultsSetPagination
 
 
 
@@ -97,6 +101,7 @@ class SegurancaModeracaoViewSet(viewsets.ModelViewSet):
     queryset = SegurancaModeracao.objects.all()
 
     serializer_class = SegurancaModeracaoSerializer
+    pagination_class = StandardResultsSetPagination
 
 
 
