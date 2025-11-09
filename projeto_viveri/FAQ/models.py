@@ -14,7 +14,6 @@ class Pergunta(models.Model):
         return self.votos.count()
 
 
-
 class Resposta(models.Model):
     txt = models.TextField()
     data = models.DateTimeField(default=timezone.now)
@@ -25,7 +24,6 @@ class Resposta(models.Model):
 class TipoVoto(models.TextChoices):
     UP = 'UP', 'Upvote'
     DOWN = 'DOWN', 'Downvote'
-
 
 class Voto(models.Model):
     tipo = models.CharField(max_length=5, choices=TipoVoto.choices)

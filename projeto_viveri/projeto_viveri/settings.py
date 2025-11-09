@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'FAQ',
     'accounts',
     'Events',
+
 ]
 
 REST_FRAMEWORK = {
