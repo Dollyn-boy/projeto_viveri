@@ -33,7 +33,7 @@ class PessoaFisica(models.Model):
         ordering = ['id']
 
     def str(self):
-        return f"{self.usuario.first_name +  " " + self.usuario.last_name }"
+        return self.usuario.first_name +  " " + self.usuario.last_name 
     
     def clean(self):
         if self.data_nascimento >= date.today():
