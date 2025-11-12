@@ -13,7 +13,7 @@ class Eventos(models.Model):
     id_evento = models.AutoField(primary_key=True)
     nome = models.CharField(max_length=100)
     descricao = models.CharField(max_length=1000)
-    data = models.DateTimeField()
+    data = models.DateTimeField(auto_now_add=True) # adicionado "auto_now_add=True" para criar uma data automaticamente.
     link = models.URLField(max_length=200)
     local = models.ForeignKey(Local,on_delete=models.CASCADE)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)

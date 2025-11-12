@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'FAQ',
     'accounts',
     'Events',
-    'rest_framework'
 ]
 
 REST_FRAMEWORK = {

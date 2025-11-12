@@ -1,9 +1,8 @@
 # Adrielle, Duda e Taylon
 
 from django.test import TestCase
-from django.utils import timezone
+
 from FAQ.models import Pergunta, Resposta, Voto, Denuncia, Notificacao, TipoVoto, TipoNotificacao
-from FAQ.views import perguntas_porEvento
 
 try:
     from accounts.models import Usuario
@@ -22,13 +21,13 @@ except ImportError:
             managed = False
 
 class ModelTestCase(TestCase):
-    def setUp(self): # Duda
+    def setUp(self):
         self.usuario = Usuario.objects.create_user(username='test', password='senhaforte')
         self.evento = Eventos.objects.create(nome='Evento De Test')
 
     pergunta = None
 
-    def setUp(self): # Dudu
+    def setUp(self):
         self.usuario = Usuario.objects.create_user(username='test', password='senhaforte')
         self.local = Local.objects.create(id_local="12334")
         self.evento = Eventos.objects.create(
@@ -38,7 +37,7 @@ class ModelTestCase(TestCase):
         )
 
 
-    def test_pergunta(self): 
+    def test_pergunta(self):
         self.pergunta = Pergunta.objects.create(
             texto = "Qual?",
             usuario = self.usuario,

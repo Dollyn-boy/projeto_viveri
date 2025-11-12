@@ -7,7 +7,7 @@ router.register(r"pergunta", PerguntaViewSet)
 router.register(r"respostas", RespostasViewSet)
 router.register(r"votos", VotoViewSet)
 router.register(r"denuncias", DenunciaViewSet)
-router.register(r"notificacoes", NotificacaoViewSet)
+router.register(r"notificacoes", NotificacaoViewSet, basename='notificacao')
 
 urlpatterns = [
     path("listar_perguntas/", listar_perguntas, name="listar_perguntas"),

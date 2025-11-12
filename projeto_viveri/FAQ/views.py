@@ -1,6 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+
 from .models import *
-# Create your views here.
+from rest_framework import viewsets
+from .serializers import DenunciaSerializar, NotificacaoSerializer, PerguntaSerializer, RespostaSerializer, \
+    VotoSerializer
+from Events.models import Eventos
+
 """
 listar_produtos(request) X
 detalhe_produto(request) X
@@ -9,9 +15,49 @@ atualizar_produto(request)
 delete_produto(request) X
 """
 
+
+class DenunciaViewSet(viewsets.ModelViewSet):
+    queryset = Denuncia.objects.all()
+    serializer_class = DenunciaSerializar
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+
+class NotificacaoViewSet(viewsets.ModelViewSet):
+    queryset = Notificacao.objects.all()
+    serializer_class = NotificacaoSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(usuario=self.request.user)
+
+
+class VotoViewSet(viewsets.ModelViewSet):
+    queryset = Voto.objects.all()
+    serializer_class = VotoSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+
+class PerguntaViewSet(viewsets.ModelViewSet):
+    queryset = Pergunta.objects.all().order_by('-data')
+    serializer_class = PerguntaSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(usuario=self.request.user)
+
+
+class RespostasViewSet(viewsets.ModelViewSet):
+    queryset = Resposta.objects.all()
+    serializer_class = RespostaSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(usuario=self.request.user)
+
+
 def listar_perguntas(request):
     perguntas = Pergunta.objects.all()
-    
+
     return render(request, "listar_perguntas.html", {"perguntas": perguntas})
 
 
@@ -20,9 +66,9 @@ def perguntas_porEvento(request, id_e):
     perguntas = Pergunta.objects.filter(evento=evento)
     contexto = {
         "perguntas": perguntas,
-        "evento": evento 
+        "evento": evento
 
-        }
+    }
     return render(request, "perguntas_por_evento.html", contexto)
 
 
@@ -56,13 +102,14 @@ def delete_pergunta(request, id_p):
 
     return render(request, "confirmar_delete.html", {"pergunta": pergunta})
 
+
 def atualizar_pergunta(request, id_p):
     pergunta = get_object_or_404(Pergunta, id=id_p)
 
     if request.method == "POST":
         novo_txt = request.POST.get("txt")
         pergunta.txt = novo_txt
-        pergunta.save() 
+        pergunta.save()
         return redirect("listar_perguntas")
 
     return render(request, "editar_pergunta.html", {"pergunta": pergunta})
