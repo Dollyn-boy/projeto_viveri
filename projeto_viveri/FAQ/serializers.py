@@ -27,7 +27,8 @@ class PerguntaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pergunta
-        fields = 'id', 'texto', 'data', 'usuario', 'evento'
+        fields = ['id', 'txt', 'data', 'usuario', 'evento', 'total_votes']
+
 
 class RespostaSerializer(serializers.ModelSerializer):
     pergunta = serializers.PrimaryKeyRelatedField(queryset=Pergunta.objects.all()) # Salva o ID da pergunta apenas
@@ -35,7 +36,21 @@ class RespostaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Resposta
-        fields = "texto", "data", "pergunta", "usuario"
+        fields = ['id', 'txt', 'data', 'usuario', 'pergunta']
+        
+
+class DenunciaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Denuncia
+        fields = ['id', 'descricao', 'data', 'usuario', 'pergunta', 'resposta']
+
+
+class NotificacaoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notificacao
+        fields = ['id', 'tipo', 'conteudo', 'data', 'usuario', 'evento', 'pergunta']
+
+
 
 class VotoSerializer(serializers.ModelSerializer):
     usuario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all())

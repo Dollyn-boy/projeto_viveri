@@ -2,12 +2,14 @@ from django.urls import path, include
 from .views import *
 from rest_framework.routers import DefaultRouter
 
+
+app_name = 'FAQ'
 router = DefaultRouter()
 router.register(r"pergunta", PerguntaViewSet)
 router.register(r"respostas", RespostasViewSet)
 router.register(r"votos", VotoViewSet)
 router.register(r"denuncias", DenunciaViewSet)
-router.register(r"notificacoes", NotificacaoViewSet, basename='notificacao')
+router.register(r"notificacoes", NotificacaoViewSet)
 
 urlpatterns = [
     path("listar_perguntas/", listar_perguntas, name="listar_perguntas"),
