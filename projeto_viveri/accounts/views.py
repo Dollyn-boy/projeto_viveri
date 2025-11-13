@@ -3,7 +3,7 @@ from .pagination import StandardResultsSetPagination
 from .models import Usuario, PessoaFisica, PessoaJuridica, SegurancaModeracao
 from .serializers import ForgotPasswordSerializer, UsuarioSerializer, PessoaFisicaSerializer, PessoaJuridicaSerializer, SegurancaModeracaoSerializer, LoginSerializer, VerifyCodeSerializer
 from rest_framework.permissions import IsAuthenticated,IsAdminUser ,AllowAny
-from rest_framework.permissions import BasePermission
+from .permissions import IsSelf,IsPessoaJuridica
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -11,13 +11,7 @@ from django.contrib.auth import authenticate
 from rest_framework.views import APIView
 
 
-class IsSelf(BasePermission):
-    """
-    Custom permission to only allow a user to edit their own details.
-    """
-    def has_object_permission(self, request, view, obj):
-        #verifica se o usuario é o usuario 👍👍👍👍
-        return obj == request.user
+
 
 
 class UsuarioViewSet(viewsets.ModelViewSet):
@@ -39,9 +33,12 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         elif self.action == 'list':
             
             permission_classes = [IsAdminUser]
-        elif self.action in ['retrieve', 'update', 'partial_update', 'destroy']:
+        elif self.action == 'retrieve':
+            
+            permission_classes = [IsAuthenticated ,IsSelf | IsAdminUser | IsPessoaJuridica] #é ele mesmo ou(|) é adm ou é pessoa juridica
+        elif self.action in ['update', 'partial_update', 'destroy']:
             #so usuarios autenticados que são eles mesmos
-            permission_classes = [IsAuthenticated ,IsAdminUser,  IsSelf]
+            permission_classes = [IsAuthenticated ,IsSelf | IsAdminUser] #é ele mesmo ou(|) é adm
         else:
             #por enquanto qualquer outra acao é so de admin
             permission_classes = [IsAdminUser]
@@ -82,6 +79,8 @@ class UsuarioViewSet(viewsets.ModelViewSet):
 
 class PessoaFisicaViewSet(viewsets.ModelViewSet):
     
+    permission_classes = [IsAuthenticated]
+    
     queryset = PessoaFisica.objects.all()
     
     serializer_class = PessoaFisicaSerializer
@@ -90,6 +89,8 @@ class PessoaFisicaViewSet(viewsets.ModelViewSet):
 
 
 class PessoaJuridicaViewSet(viewsets.ModelViewSet):
+    
+    permission_classes = [IsAuthenticated]
     queryset = PessoaJuridica.objects.all()
 
     serializer_class = PessoaJuridicaSerializer

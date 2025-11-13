@@ -4,7 +4,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
 import random
 from django.core.mail import send_mail
-
+from .permissions import IsSelf, IsPessoaJuridica
 User = get_user_model()
 
 
@@ -26,6 +26,8 @@ class UsuarioSerializer(serializers.ModelSerializer):
                 'status_conta',
                 'last_login',
                 'date_joined',
+                'groups',          
+                'user_permissions'
             ]
         #campos q a api n manda
         extra_kwargs = {
@@ -84,6 +86,12 @@ class SegurancaModeracaoSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['data_denuncia']
         
+    def validate(self, data):
+        #pra verificar se o usuario esta denunciando a si mesmo
+        if data['usuario_denunciante'] == data['usuario_denunciado']:
+            raise serializers.ValidationError("Um usuário não pode denunciar sua própria conta")
+        return data
+        
 class LoginSerializer(serializers.Serializer):
     email = serializers.CharField()
     password = serializers.CharField()
@@ -133,6 +141,6 @@ class VerifyCodeSerializer(serializers.Serializer):
     def save(self):
         user = self.validated_data['user']
         user.set_password(self.validated_data['nova_senha'])
-        user.codigo = None
+        user.codigo_verificacao = None
         user.save()
         return user
