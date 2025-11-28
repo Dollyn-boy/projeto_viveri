@@ -3,6 +3,7 @@ projeto_viveri/venv/
 # Ambiente virtual
 venv/
 env/
+.env
 *.venv
 
 # Python
