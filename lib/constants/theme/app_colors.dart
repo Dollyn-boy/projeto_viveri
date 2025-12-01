@@ -11,4 +11,7 @@ class AppColors {
   static const Color textBody = Color(0xFF2F332C); // Verde médio para textos do corpo
   static const Color primary = Color(0xFF284017);
   static const Color amarelo = Color(0xFFF69B0F);
+  static const Color primaria = Color(0xFF2F4838); // Verde escuro
+  static const Color fundo = Color(0xFFD9E5D6); // Verde claro
+  
 }

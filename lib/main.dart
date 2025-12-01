@@ -4,6 +4,9 @@ import 'package:viveri/pages/home/onboarding/onboard_page.dart';
 import 'package:viveri/pages/home/splash/splash_page.dart';
 import 'pages/filtro_preco/filtro_preco_page.dart';
 import 'pages/alterar_senha/alterar_senha_page.dart';
+import 'pages/auth/recover_password_page.dart'; 
+import 'pages/auth/password_success_page.dart';
+import 'pages/auth/create_account_success_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -38,6 +41,11 @@ class MyApp extends StatelessWidget {
 
         '/filtro-preco': (context) => const FiltroPrecoPage(),
         '/alterar-senha': (context) => const AlterarSenhaPage(),
+
+        '/recuperar-senha': (context) => const RecoverPasswordPage(),
+        '/password-success': (context) => const PasswordSuccessPage(),
+        '/create-account-success': (context) => const CreateAccountSuccessPage(),
+        
       },
     );
   }
