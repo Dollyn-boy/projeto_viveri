@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:viveri/pages/home/home_page.dart';
+import 'package:viveri/pages/home/onboarding/onboard_page.dart';
+import 'package:viveri/pages/home/splash/splash_page.dart';
 import 'pages/filtro_preco/filtro_preco_page.dart';
 import 'pages/alterar_senha/alterar_senha_page.dart';
 
@@ -12,10 +15,27 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Viveri',
+      theme: ThemeData(
+        // Define a cor base do app 
+        primarySwatch: Colors.green, 
+        useMaterial3: true,
+      ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+
+      home: const SplashPage(), // Tela inicial é a Splash
+
       routes: {
-        '/': (context) => const AlterarSenhaPage(),
+        '/onboarding': (context) => const OnboardingPage(), // Rota para Onboarding 
+        '/welcome': (context) => const HomePage(), // Rota para a HomePage 
+        '/login': (context) => const Scaffold(
+              body: Center(child: Text("Aqui será o Login")), // por enquanto q nao tem login
+        ),
+        '/cadastro': (context) => const Scaffold(
+              body: Center(child: Text("Aqui será o Cadastro")), // por enquanto q nao tem cadastro
+        ),
+
+
         '/filtro-preco': (context) => const FiltroPrecoPage(),
         '/alterar-senha': (context) => const AlterarSenhaPage(),
       },
