@@ -14,7 +14,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 
 class PerguntaViewSet(viewsets.ModelViewSet):
     queryset = Pergunta.objects.all()
-    serializer_class = PeguntaSerializer
+    serializer_class = PerguntaSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
