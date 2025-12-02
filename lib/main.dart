@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:viveri/pages/home/home_page.dart';
 import 'package:viveri/pages/home/onboarding/onboard_page.dart';
 import 'package:viveri/pages/home/splash/splash_page.dart';
+import 'pages/createCPF/registration_screen.dart';
 import 'pages/filtro_preco/filtro_preco_page.dart';
 import 'pages/alterar_senha/alterar_senha_page.dart';
 import 'pages/auth/recover_password_page.dart'; 
@@ -34,9 +35,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const Scaffold(
               body: Center(child: Text("Aqui será o Login")), // por enquanto q nao tem login
         ),
-        '/cadastro': (context) => const Scaffold(
-              body: Center(child: Text("Aqui será o Cadastro")), // por enquanto q nao tem cadastro
-        ),
+        '/cadastro': (context) => const RegistrationScreen(),
 
 
         '/filtro-preco': (context) => const FiltroPrecoPage(),
