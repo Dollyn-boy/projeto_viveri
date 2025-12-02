@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'reset_password_page.dart';
 
 class RecoverPasswordPage extends StatelessWidget {
   const RecoverPasswordPage({super.key});
@@ -8,7 +9,6 @@ class RecoverPasswordPage extends StatelessWidget {
     final Color backgroundColor = const Color(0xFFD9E5D6);
     final Color darkGreen = const Color(0xFF2F4838);
     final Color accentYellow = const Color(0xFFF2B656);
-  
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -16,7 +16,8 @@ class RecoverPasswordPage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, size: 20, color: Colors.grey),
+          icon: const Icon(Icons.arrow_back_ios_new,
+              size: 20, color: Colors.grey),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -28,9 +29,9 @@ class RecoverPasswordPage extends StatelessWidget {
             children: [
               Image.asset(
                 'assets/images/logo_viveri.png',
-                height: 160, 
+                height: 160,
               ),
-              const SizedBox(height: 40), 
+              const SizedBox(height: 40),
               // --- Título ---
               Align(
                 alignment: Alignment.centerLeft,
@@ -49,9 +50,10 @@ class RecoverPasswordPage extends StatelessWidget {
               TextField(
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: const Color(0xFFCCD9C9), 
-                  contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-                  
+                  fillColor: const Color(0xFFCCD9C9),
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+
                   // Borda Vermelha (Simulando o erro visualmente)
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -71,7 +73,7 @@ class RecoverPasswordPage extends StatelessWidget {
                 child: Text(
                   "Email não encontrado!",
                   style: TextStyle(
-                    color: Colors.red, 
+                    color: Colors.red,
                     fontSize: 12,
                   ),
                   textAlign: TextAlign.center,
@@ -86,14 +88,17 @@ class RecoverPasswordPage extends StatelessWidget {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: darkGreen,
-                    foregroundColor: accentYellow, 
+                    foregroundColor: accentYellow,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6),
                     ),
                   ),
                   onPressed: () {
-                    
-                    Navigator.pushNamed(context, '/password-success');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ResetPasswordPage()),
+                    );
                   },
                   child: const Text(
                     "Enviar",
