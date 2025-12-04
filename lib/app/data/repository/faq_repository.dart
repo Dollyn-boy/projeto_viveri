@@ -1,21 +1,32 @@
-import '/services/api_service.dart';
+import '../http/http_client.dart';
 import '../models/denuncia_model.dart';
 import '../models/notificacao_model.dart';
 import '../models/pergunta_model.dart';
 import '../models/resposta_model.dart';
 
-/// Repositório responsável por gerenciar operações de FAQ (Perguntas, Respostas, Votos, etc.)
-class FaqRepository {
-  final ApiService _api;
+/// EXEMPLO: faqRepository usando HttpClient (abordagem do vídeo)
+/// 
+/// Esta é a mesma funcionalidade do faq_repository.dart
+/// mas usando HttpClient ao invés de ApiService
+class faqRepository {
+  final IHttpClient _httpClient;
+  final String _baseUrl;
 
-  FaqRepository(this._api);
+  faqRepository({
+    required IHttpClient httpClient,
+    required String baseUrl,
+  })  : _httpClient = httpClient,
+        _baseUrl = baseUrl;
 
   // ==================== PERGUNTAS ====================
 
-  /// Busca todas as perguntas disponíveis
+  /// Busca todas as perguntas
   Future<List<Pergunta>> buscarTodasPerguntas() async {
     try {
-      final data = await _api.get('/FAQ/pergunta/');
+      final data = await _httpClient.get(
+        url: '$_baseUrl/faq/pergunta/',
+      );
+      
       if (data == null || data is! List) return [];
       return data.map((e) => Pergunta.fromJson(e)).toList();
     } catch (e) {
@@ -23,10 +34,12 @@ class FaqRepository {
     }
   }
 
-  /// Busca uma pergunta específica por ID
+  /// Busca uma pergunta por ID
   Future<Pergunta?> buscarPerguntaPorId(int id) async {
     try {
-      final data = await _api.get('/FAQ/pergunta/$id/');
+      final data = await _httpClient.get(
+        url: '$_baseUrl/faq/pergunta/$id/',
+      );
       return Pergunta.fromJson(data);
     } catch (e) {
       throw Exception('Erro ao buscar pergunta $id: $e');
@@ -34,19 +47,11 @@ class FaqRepository {
   }
 
   /// Cria uma nova pergunta
-  ///
-  /// Exemplo de payload:
-  /// ```dart
-  /// {
-  ///   'titulo': 'Como funciona?',
-  ///   'conteudo': 'Descrição da pergunta',
-  ///   'evento': 1 // opcional
-  /// }
-  /// ```
   Future<Pergunta> criarPergunta({
     required String titulo,
     required String conteudo,
     int? eventoId,
+    String? token,
   }) async {
     try {
       final payload = {
@@ -54,19 +59,31 @@ class FaqRepository {
         'conteudo': conteudo,
         if (eventoId != null) 'evento': eventoId,
       };
-      final data = await _api.post('/FAQ/pergunta/', payload);
+
+      // Se tiver token, adiciona no header
+      final headers = token != null 
+          ? {'Authorization': 'Token $token'} 
+          : null;
+
+      final data = await _httpClient.post(
+        url: '$_baseUrl/faq/pergunta/',
+        body: payload,
+        headers: headers,
+      );
+      
       return Pergunta.fromJson(data);
     } catch (e) {
       throw Exception('Erro ao criar pergunta: $e');
     }
   }
 
-  /// Atualiza uma pergunta completamente (requer todos os campos)
+  /// Atualiza uma pergunta
   Future<Pergunta> atualizarPergunta(
     int id, {
     required String titulo,
     required String conteudo,
     int? eventoId,
+    String? token,
   }) async {
     try {
       final payload = {
@@ -74,20 +91,40 @@ class FaqRepository {
         'conteudo': conteudo,
         if (eventoId != null) 'evento': eventoId,
       };
-      final data = await _api.put('/FAQ/pergunta/$id/', payload);
+
+      final headers = token != null 
+          ? {'Authorization': 'Token $token'} 
+          : null;
+
+      final data = await _httpClient.put(
+        url: '$_baseUrl/faq/pergunta/$id/',
+        body: payload,
+        headers: headers,
+      );
+      
       return Pergunta.fromJson(data);
     } catch (e) {
       throw Exception('Erro ao atualizar pergunta $id: $e');
     }
   }
 
-  /// Atualiza parcialmente uma pergunta (apenas campos fornecidos)
+  /// Atualiza parcialmente uma pergunta
   Future<Pergunta> atualizarPerguntaParcial(
     int id,
-    Map<String, dynamic> campos,
-  ) async {
+    Map<String, dynamic> campos, {
+    String? token,
+  }) async {
     try {
-      final data = await _api.patch('/FAQ/pergunta/$id/', campos);
+      final headers = token != null 
+          ? {'Authorization': 'Token $token'} 
+          : null;
+
+      final data = await _httpClient.patch(
+        url: '$_baseUrl/faq/pergunta/$id/',
+        body: campos,
+        headers: headers,
+      );
+      
       return Pergunta.fromJson(data);
     } catch (e) {
       throw Exception('Erro ao atualizar pergunta $id parcialmente: $e');
@@ -95,9 +132,16 @@ class FaqRepository {
   }
 
   /// Deleta uma pergunta
-  Future<void> deletarPergunta(int id) async {
+  Future<void> deletarPergunta(int id, {String? token}) async {
     try {
-      await _api.delete('/FAQ/pergunta/$id/');
+      final headers = token != null 
+          ? {'Authorization': 'Token $token'} 
+          : null;
+
+      await _httpClient.delete(
+        url: '$_baseUrl/faq/pergunta/$id/',
+        headers: headers,
+      );
     } catch (e) {
       throw Exception('Erro ao deletar pergunta $id: $e');
     }
@@ -105,22 +149,28 @@ class FaqRepository {
 
   // ==================== VOTOS ====================
 
-  /// Registra um voto em uma pergunta
-  ///
-  /// [tipo] pode ser 'UP' (positivo) ou 'DOWN' (negativo)
+  /// Vota em uma pergunta
   Future<Map<String, dynamic>> votarPergunta(
     int perguntaId,
-    String tipo,
-  ) async {
+    String tipo, {
+    String? token,
+  }) async {
     try {
       final tipoNormalizado = tipo.toUpperCase();
       if (!['UP', 'DOWN'].contains(tipoNormalizado)) {
         throw ArgumentError('Tipo de voto inválido. Use "UP" ou "DOWN".');
       }
 
-      final data = await _api.post('/FAQ/pergunta/$perguntaId/votar/', {
-        'tipo': tipoNormalizado,
-      });
+      final headers = token != null 
+          ? {'Authorization': 'Token $token'} 
+          : null;
+
+      final data = await _httpClient.post(
+        url: '$_baseUrl/faq/pergunta/$perguntaId/votar/',
+        body: {'tipo': tipoNormalizado},
+        headers: headers,
+      );
+      
       return data;
     } catch (e) {
       throw Exception('Erro ao votar na pergunta $perguntaId: $e');
@@ -129,14 +179,15 @@ class FaqRepository {
 
   // ==================== RESPOSTAS ====================
 
-  /// Busca todas as respostas, com opção de filtrar por pergunta
+  /// Busca todas as respostas
   Future<List<Resposta>> buscarRespostas({int? perguntaId}) async {
     try {
       final path = perguntaId != null
-          ? '/FAQ/resposta/?pergunta=$perguntaId'
-          : '/FAQ/resposta/';
+          ? '$_baseUrl/faq/resposta/?pergunta=$perguntaId'
+          : '$_baseUrl/faq/resposta/';
 
-      final data = await _api.get(path);
+      final data = await _httpClient.get(url: path);
+      
       if (data == null || data is! List) return [];
       return data.map((e) => Resposta.fromJson(e)).toList();
     } catch (e) {
@@ -144,60 +195,48 @@ class FaqRepository {
     }
   }
 
-  /// Busca uma resposta específica por ID
-  Future<Resposta?> buscarRespostaPorId(int id) async {
-    try {
-      final data = await _api.get('/FAQ/resposta/$id/');
-      return Resposta.fromJson(data);
-    } catch (e) {
-      throw Exception('Erro ao buscar resposta $id: $e');
-    }
-  }
-
-  /// Cria uma nova resposta para uma pergunta
+  /// Cria uma nova resposta
   Future<Resposta> criarResposta({
     required String conteudo,
     required int perguntaId,
+    String? token,
   }) async {
     try {
-      final payload = {'conteudo': conteudo, 'pergunta': perguntaId};
-      final data = await _api.post('/FAQ/resposta/', payload);
+      final payload = {
+        'conteudo': conteudo,
+        'pergunta': perguntaId,
+      };
+
+      final headers = token != null 
+          ? {'Authorization': 'Token $token'} 
+          : null;
+
+      final data = await _httpClient.post(
+        url: '$_baseUrl/faq/resposta/',
+        body: payload,
+        headers: headers,
+      );
+      
       return Resposta.fromJson(data);
     } catch (e) {
       throw Exception('Erro ao criar resposta: $e');
     }
   }
 
-  /// Atualiza uma resposta existente
-  Future<Resposta> atualizarResposta(
-    int id, {
-    required String conteudo,
-    required int perguntaId,
-  }) async {
-    try {
-      final payload = {'conteudo': conteudo, 'pergunta': perguntaId};
-      final data = await _api.put('/FAQ/resposta/$id/', payload);
-      return Resposta.fromJson(data);
-    } catch (e) {
-      throw Exception('Erro ao atualizar resposta $id: $e');
-    }
-  }
-
-  /// Deleta uma resposta
-  Future<void> deletarResposta(int id) async {
-    try {
-      await _api.delete('/FAQ/resposta/$id/');
-    } catch (e) {
-      throw Exception('Erro ao deletar resposta $id: $e');
-    }
-  }
-
   // ==================== NOTIFICAÇÕES ====================
 
-  /// Busca todas as notificações do usuário logado
-  Future<List<Notificacao>> buscarNotificacoes() async {
+  /// Busca notificações
+  Future<List<Notificacao>> buscarNotificacoes({String? token}) async {
     try {
-      final data = await _api.get('/FAQ/notificacao/');
+      final headers = token != null 
+          ? {'Authorization': 'Token $token'} 
+          : null;
+
+      final data = await _httpClient.get(
+        url: '$_baseUrl/faq/notificacao/',
+        headers: headers,
+      );
+      
       if (data == null || data is! List) return [];
       return data.map((e) => Notificacao.fromJson(e)).toList();
     } catch (e) {
@@ -205,32 +244,15 @@ class FaqRepository {
     }
   }
 
-  /// Marca uma notificação como lida
-  Future<void> marcarNotificacaoComoLida(int id) async {
-    try {
-      await _api.patch('/FAQ/notificacao/$id/', {'lida': true});
-    } catch (e) {
-      throw Exception('Erro ao marcar notificação $id como lida: $e');
-    }
-  }
-
   // ==================== DENÚNCIAS ====================
 
-  /// Cria uma nova denúncia
-  ///
-  /// Exemplo de payload:
-  /// ```dart
-  /// {
-  ///   'tipo': 'SPAM',
-  ///   'descricao': 'Motivo da denúncia',
-  ///   'pergunta': 1, // ou 'resposta': 1
-  /// }
-  /// ```
+  /// Cria uma denúncia
   Future<Denuncia> criarDenuncia({
     required String tipo,
     required String descricao,
     int? perguntaId,
     int? respostaId,
+    String? token,
   }) async {
     try {
       if (perguntaId == null && respostaId == null) {
@@ -244,7 +266,16 @@ class FaqRepository {
         if (respostaId != null) 'resposta': respostaId,
       };
 
-      final data = await _api.post('/FAQ/denuncia/', payload);
+      final headers = token != null 
+          ? {'Authorization': 'Token $token'} 
+          : null;
+
+      final data = await _httpClient.post(
+        url: '$_baseUrl/faq/denuncia/',
+        body: payload,
+        headers: headers,
+      );
+      
       return Denuncia.fromJson(data);
     } catch (e) {
       throw Exception('Erro ao criar denúncia: $e');

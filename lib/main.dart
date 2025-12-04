@@ -4,6 +4,7 @@ import 'package:viveri/pages/home/onboarding/onboard_page.dart';
 import 'package:viveri/pages/home/splash/splash_page.dart';
 import 'pages/filtro_preco/filtro_preco_page.dart';
 import 'pages/alterar_senha/alterar_senha_page.dart';
+import 'pages/FaqTestePage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
 
-      home: const SplashPage(), // Tela inicial é a Splash
+      home: const FaqTestePage(),//SplashPage(), // Tela inicial é a Splash
 
       routes: {
         '/onboarding': (context) => const OnboardingPage(), // Rota para Onboarding 
@@ -38,6 +39,8 @@ class MyApp extends StatelessWidget {
 
         '/filtro-preco': (context) => const FiltroPrecoPage(),
         '/alterar-senha': (context) => const AlterarSenhaPage(),
+
+        '/faq': (context) => const FaqTestePage(),
       },
     );
   }
