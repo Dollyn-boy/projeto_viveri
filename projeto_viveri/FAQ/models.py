@@ -11,7 +11,10 @@ class Pergunta(models.Model):
     evento = models.ForeignKey(Eventos, on_delete=models.CASCADE)
 
     def total_votes(self):
-        return self.votos.count()
+        # Conta UP como +1 e DOWN como -1
+        upvotes = self.votos.filter(tipo=TipoVoto.UP).count()
+        downvotes = self.votos.filter(tipo=TipoVoto.DOWN).count()
+        return upvotes - downvotes
 
 
 class Resposta(models.Model):
@@ -60,5 +63,3 @@ class Denuncia(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=True)
     pergunta = models.ForeignKey(Pergunta, on_delete=models.CASCADE, null=True, blank=True)
     resposta = models.ForeignKey(Resposta, on_delete=models.CASCADE, null=True, blank=True)
-
-

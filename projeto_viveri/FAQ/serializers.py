@@ -1,29 +1,9 @@
 from rest_framework import serializers
 from .models import Pergunta, Resposta, Voto, Denuncia, Notificacao
-from accounts.models import Usuario
-from Events.models import Eventos
 
-class DenunciaSerializar(serializers.ModelSerializer):
-    pergunta = serializers.PrimaryKeyRelatedField(queryset=Pergunta.objects.all())
-    resposta = serializers.PrimaryKeyRelatedField(queryset=Resposta.objects.all())
-
-    class Meta:
-        model = Denuncia
-        fields = 'id', 'descricao', 'data', 'pergunta', 'resposta'
-
-
-class NotificacaoSerializer(serializers.ModelSerializer):
-    pergunta = serializers.PrimaryKeyRelatedField(queryset=Pergunta.objects.all())
-    usuario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all())
-    evento = serializers.PrimaryKeyRelatedField(queryset=Eventos.objects.all())
-
-    class Meta:
-        model = Notificacao
-        fields = "id", "tipo", "data", "evento", "pergunta", "usuario"
 
 class PerguntaSerializer(serializers.ModelSerializer):
-    usuario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all())
-    evento = serializers.PrimaryKeyRelatedField(queryset=Eventos.objects.all())
+    usuario = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Pergunta
@@ -31,30 +11,24 @@ class PerguntaSerializer(serializers.ModelSerializer):
 
 
 class RespostaSerializer(serializers.ModelSerializer):
-    pergunta = serializers.PrimaryKeyRelatedField(queryset=Pergunta.objects.all()) # Salva o ID da pergunta apenas
-    usuario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all())
+    usuario = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Resposta
         fields = ['id', 'txt', 'data', 'usuario', 'pergunta']
-        
+
 
 class DenunciaSerializer(serializers.ModelSerializer):
+    usuario = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = Denuncia
         fields = ['id', 'descricao', 'data', 'usuario', 'pergunta', 'resposta']
 
 
 class NotificacaoSerializer(serializers.ModelSerializer):
+    usuario = serializers.PrimaryKeyRelatedField(read_only=True)
+    
     class Meta:
         model = Notificacao
         fields = ['id', 'tipo', 'conteudo', 'data', 'usuario', 'evento', 'pergunta']
-
-
-
-class VotoSerializer(serializers.ModelSerializer):
-    usuario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all())
-
-    class Meta:
-        model = Voto
-        fields = 'tipo', 'pergunta', 'usuario'
