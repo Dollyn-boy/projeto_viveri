@@ -9,6 +9,8 @@ import 'pages/alterar_senha/alterar_senha_page.dart';
 import 'pages/auth/recover_password_page.dart'; 
 import 'pages/auth/password_success_page.dart';
 import 'pages/auth/create_account_success_page.dart';
+import 'package:viveri/pages/createCNPJ/screens/cadastro_cnpj_screen.dart';
+import 'pages/FAQ/criar_pergunta_page.dart';
 import 'package:viveri/pages/eventosCriados_e_Fav/controller/Eventscontroller.dart';
   import 'package:provider/provider.dart'; //só por conta do ChangeNotifierProvider
 void main() {
@@ -54,6 +56,8 @@ class MyApp extends StatelessWidget {
         '/create-account-success': (context) => const CreateAccountSuccessPage(),
         
         '/eventos-criados': (context) => const MainEventsPage(),
+        '/criar-pergunta': (context) => const CriarPerguntaPage(),
+        '/cnpj': (context) => const CadastroCnpjScreen(),
       },
     );
   }
