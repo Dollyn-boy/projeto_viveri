@@ -1,47 +1,34 @@
-import 'usuario_model.dart';
-
+/// Modelo Resposta - alinhado com a API Django
 class Resposta {
   final int id;
-  final String conteudo;
-  final Usuario usuario;
-  final int perguntaId;
-  final DateTime? criadoEm;
-  final DateTime? atualizadoEm;
+  final String txt;  // Campo da API
+  final DateTime data;  // Campo da API
+  final int usuario;  // ID do usuário
+  final int pergunta;  // ID da pergunta
 
   Resposta({
     required this.id,
-    required this.conteudo,
+    required this.txt,
+    required this.data,
     required this.usuario,
-    required this.perguntaId,
-    this.criadoEm,
-    this.atualizadoEm,
+    required this.pergunta,
   });
 
   factory Resposta.fromJson(Map<String, dynamic> j) {
-    DateTime? parseDt(dynamic v) {
-      if (v == null) return null;
-      try {
-        return DateTime.parse(v.toString());
-      } catch (_) {
-        return null;
-      }
-    }
-
-    final usuarioJson = j['usuario'] ?? 0;
     return Resposta(
       id: j['id'] ?? 0,
-      conteudo: j['conteudo'] ?? j['texto'] ?? '',
-      usuario: usuarioJson is Map ? Usuario.fromJson(usuarioJson) : Usuario(id: usuarioJson ?? 0),
-      perguntaId: j['pergunta'] is Map ? (j['pergunta']['id'] ?? 0) : (j['pergunta'] ?? 0),
-      criadoEm: parseDt(j['created_at'] ?? j['criado_em']),
-      atualizadoEm: parseDt(j['updated_at'] ?? j['atualizado_em']),
+      txt: j['txt'] ?? '',
+      data: j['data'] != null ? DateTime.parse(j['data']) : DateTime.now(),
+      usuario: j['usuario'] ?? 0,
+      pergunta: j['pergunta'] ?? 0,
     );
   }
 
   Map<String, dynamic> toJson() => {
         if (id != 0) 'id': id,
-        'conteudo': conteudo,
-        'usuario': usuario.id,
-        'pergunta': perguntaId,
+        'txt': txt,
+        'data': data.toIso8601String(),
+        'usuario': usuario,
+        'pergunta': pergunta,
       };
 }

@@ -1,9 +1,14 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import '../../constants/api_constants.dart';
 
 /// Serviço de autenticação que gerencia o token JWT
 class AuthService {
   static const String _tokenKey = 'auth_token';
   static const String _refreshTokenKey = 'refresh_token';
+  final String baseUrl = ApiConstants.baseUrl;
+  
   
   String? _cachedToken;
   String? _cachedRefreshToken;
@@ -69,5 +74,40 @@ class AuthService {
   void clearCache() {
     _cachedToken = null;
     _cachedRefreshToken = null;
+  }
+
+  /// Renova o token de acesso usando o refresh token
+  /// Retorna true se conseguiu renovar, false caso contrário
+  Future<bool> renovarToken() async {
+    try {
+      final refreshToken = await getRefreshToken();
+      if (refreshToken == null || refreshToken.isEmpty) {
+        print('❌ Sem refresh token disponível');
+        return false;
+      }
+
+      print('🔄 Renovando token...');
+      
+      final response = await http.post(
+        Uri.parse('$baseUrl/token/refresh/'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'refresh': refreshToken}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final newAccessToken = data['access'] as String;
+        
+        await saveToken(newAccessToken);
+        print('✅ Token renovado com sucesso!');
+        return true;
+      } else {
+        print('❌ Falha ao renovar token: ${response.statusCode}');
+        return false;
+      }
+    } catch (e) {
+      print('❌ Erro ao renovar token: $e');
+      return false;
+    }
   }
 }

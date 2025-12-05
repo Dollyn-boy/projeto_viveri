@@ -50,18 +50,43 @@ class HttpClient implements IHttpClient {
     return headers;
   }
 
+  /// Executa requisição com retry automático em caso de 401
+  Future<dynamic> _executeWithRetry(Future<http.Response> Function() request) async {
+    try {
+      var response = await request();
+
+      // Se retornou 401, tenta renovar o token
+      if (response.statusCode == 401) {
+        print('⚠️  Token expirado (401), tentando renovar...');
+        
+        final renovado = await authService.renovarToken();
+        
+        if (renovado) {
+          print('✅ Token renovado! Repetindo requisição...');
+          authService.clearCache();
+          // Tenta a requisição novamente com o novo token
+          response = await request();
+        } else {
+          print('❌ Falha ao renovar token');
+        }
+      }
+
+      return _handleResponse(response);
+    } catch (e) {
+      if (e is HttpException) rethrow;
+      throw HttpException('Erro de conexão: $e');
+    }
+  }
+
   /// GET - Buscar dados
   @override
   Future<dynamic> get({required String url, Map<String, String>? headers}) async {
-    try {
-      final response = await client.get(
+    return _executeWithRetry(() async {
+      return await client.get(
         Uri.parse(url),
         headers: await _mergeHeaders(headers),
       );
-      return _handleResponse(response);
-    } catch (e) {
-      throw HttpException('Erro de conexão: $e');
-    }
+    });
   }
 
   /// POST - Criar recurso
@@ -71,16 +96,13 @@ class HttpClient implements IHttpClient {
     required Map<String, dynamic> body,
     Map<String, String>? headers,
   }) async {
-    try {
-      final response = await client.post(
+    return _executeWithRetry(() async {
+      return await client.post(
         Uri.parse(url),
         headers: await _mergeHeaders(headers),
         body: json.encode(body),
       );
-      return _handleResponse(response);
-    } catch (e) {
-      throw HttpException('Erro de conexão: $e');
-    }
+    });
   }
 
   /// PUT - Atualizar recurso completo
@@ -90,16 +112,13 @@ class HttpClient implements IHttpClient {
     required Map<String, dynamic> body,
     Map<String, String>? headers,
   }) async {
-    try {
-      final response = await client.put(
+    return _executeWithRetry(() async {
+      return await client.put(
         Uri.parse(url),
         headers: await _mergeHeaders(headers),
         body: json.encode(body),
       );
-      return _handleResponse(response);
-    } catch (e) {
-      throw HttpException('Erro de conexão: $e');
-    }
+    });
   }
 
   /// PATCH - Atualizar recurso parcialmente
@@ -109,30 +128,24 @@ class HttpClient implements IHttpClient {
     required Map<String, dynamic> body,
     Map<String, String>? headers,
   }) async {
-    try {
-      final response = await client.patch(
+    return _executeWithRetry(() async {
+      return await client.patch(
         Uri.parse(url),
         headers: await _mergeHeaders(headers),
         body: json.encode(body),
       );
-      return _handleResponse(response);
-    } catch (e) {
-      throw HttpException('Erro de conexão: $e');
-    }
+    });
   }
 
   /// DELETE - Remover recurso
   @override
   Future<void> delete({required String url, Map<String, String>? headers}) async {
-    try {
-      final response = await client.delete(
+    return _executeWithRetry(() async {
+      return await client.delete(
         Uri.parse(url),
         headers: await _mergeHeaders(headers),
       );
-      _handleResponse(response);
-    } catch (e) {
-      throw HttpException('Erro de conexão: $e');
-    }
+    });
   }
 
   /// Processa a resposta HTTP e trata erros
