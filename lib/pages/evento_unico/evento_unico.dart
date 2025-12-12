@@ -242,8 +242,8 @@ class _EventoUnicoState extends State<EventoUnico> {
             situacao: remoteEvento!.situacao,
             reservasCount: (remoteEvento?.reservasCount ?? 0) + 1,
             interessadosCount: remoteEvento?.interessadosCount,
-            latitude: remoteEvento?.latitude,    // preserved
-            longitude: remoteEvento?.longitude,  // preserved
+            latitude: remoteEvento?.latitude,    
+            longitude: remoteEvento?.longitude,  
           );
         });
         ScaffoldMessenger.of(context).showSnackBar(
