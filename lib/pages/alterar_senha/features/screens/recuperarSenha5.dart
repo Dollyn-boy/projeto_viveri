@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:recuperarsenhas/core/constants/app_colors.dart';
-import 'package:recuperarsenhas/core/widgets/viveri_logo.dart';
-import 'package:recuperarsenhas/services/api_service.dart';
+import 'package:projeto_viveri/core/constants/app_colors.dart';
+import 'package:projeto_viveri/core/widgets/viveri_logo.dart';
+import 'package:projeto_viveri/services/api_service.dart';
 
 class recuperarSenha5 extends StatefulWidget {
   final String emailUser;
