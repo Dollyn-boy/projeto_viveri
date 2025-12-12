@@ -1,7 +1,7 @@
 from rest_framework import viewsets, status
 from .pagination import StandardResultsSetPagination
 from .models import Usuario, PessoaFisica, PessoaJuridica, SegurancaModeracao
-from .serializers import ForgotPasswordSerializer, UsuarioSerializer, PessoaFisicaSerializer, PessoaJuridicaSerializer, SegurancaModeracaoSerializer, LoginSerializer, VerifyCodeSerializer
+from .serializers import ForgotPasswordSerializer, UsuarioSerializer, PessoaFisicaSerializer, PessoaJuridicaSerializer, SegurancaModeracaoSerializer, LoginSerializer, VerifyCodeSerializer,CheckCodeSerializer
 from rest_framework.permissions import IsAuthenticated,IsAdminUser ,AllowAny
 from rest_framework.permissions import BasePermission
 from rest_framework.decorators import action
@@ -120,4 +120,16 @@ class VerifyCodeAPIView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({"message": "Senha redefinida com sucesso."}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CheckCodeAPIView(APIView):
+    def post(self, request):
+        # Usa o serializer que SÓ valida, não salva nada
+        serializer = CheckCodeSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            # Se o código estiver certo, retorna OK (200)
+            return Response({"message": "Código válido!"}, status=status.HTTP_200_OK)
+        
+        # Se estiver errado, retorna Erro (400)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

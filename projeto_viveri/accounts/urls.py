@@ -6,7 +6,8 @@ from .views import (
     PessoaFisicaViewSet,
     PessoaJuridicaViewSet, 
     SegurancaModeracaoViewSet,
-    VerifyCodeAPIView
+    VerifyCodeAPIView,
+    CheckCodeAPIView
 )
 
 
@@ -25,4 +26,5 @@ urlpatterns = [
    path('', include(router.urls)),  # suas rotas automáticas do router
     path('auth/forgot-password/', ForgotPasswordAPIView.as_view(), name='forgot_password'),
     path('auth/verify-code/', VerifyCodeAPIView.as_view(), name='verify_code'),
+    path('auth/check-code/', CheckCodeAPIView.as_view(), name='check_code'),
 ]

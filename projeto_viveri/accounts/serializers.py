@@ -102,7 +102,7 @@ class ForgotPasswordSerializer(serializers.Serializer):
     def save(self):
         email = self.validated_data['email']
         user = User.objects.get(email=email)
-        codigo  = str(random.randint(100000, 999999))
+        codigo  = str(random.randint(10000, 99999))
         user.codigo_verificacao = codigo
         user.save()
 
@@ -136,3 +136,19 @@ class VerifyCodeSerializer(serializers.Serializer):
         user.codigo = None
         user.save()
         return user
+
+class CheckCodeSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    codigo = serializers.CharField(max_length=5) 
+
+    def validate(self, data):
+        # Verifica se existe um usuário com esse email e esse código
+        try:
+            # Tenta buscar o usuário
+            user = User.objects.get(email=data['email'], codigo_verificacao=data['codigo'])
+        except User.DoesNotExist:
+            # Se não achar, o código ou email estão errados
+            raise serializers.ValidationError("Código inválido ou e-mail incorreto.")
+        
+        # Se achou, retorna os dados (tudo ok)
+        return data
