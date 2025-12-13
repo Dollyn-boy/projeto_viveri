@@ -50,3 +50,4 @@ class Notificacao(models.Model):
     evento = models.ForeignKey(Eventos, on_delete=models.CASCADE)
     pergunta = models.ForeignKey(Pergunta, on_delete=models.CASCADE, null=True, blank=True)
 
+

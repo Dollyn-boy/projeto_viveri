@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
         '/onboarding': (context) =>
             const OnboardingPage(), // Rota para Onboarding
         '/welcome': (context) => const HomePage(), // Rota para a HomePage
-        
+
         '/login': (context) => const LoginPage(),
 
         '/cadastro': (context) => const RegistrationScreen(),
@@ -71,6 +71,8 @@ class MyApp extends StatelessWidget {
         '/cnpj': (context) => const CadastroCnpjScreen(),
 
         '/testeFaq': (context) => const FaqTestePage(),
+
+        '/faq-user': (context) => const FaqTestePage(),
       },
     );
   }

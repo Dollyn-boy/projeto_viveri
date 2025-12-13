@@ -59,17 +59,23 @@ class Eventos(models.Model):
         MAIOR_18 = 'MAIOR_18', 'Maior de 18 anos'
         MAIOR_21 = 'MAIOR_21', 'Maior de 21 anos'
 
+    TIPO_CHOICES = [
+            ('Presencial', 'Presencial'),
+            ('Online', 'Online'),
+            ('Híbrido', 'Híbrido'),
+    ]
     id_evento = models.AutoField(primary_key=True)
     nome = models.CharField(max_length=100)
     descricao = models.CharField(max_length=1000)
-    data = models.DateTimeField(default=timezone.now)
-    horario = models.TimeField(default="12:00")
+    data = models.DateTimeField()
     link = models.URLField(max_length=200)
     local = models.ForeignKey(Local, on_delete=models.CASCADE, related_name='eventos')
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='eventos')
-    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, related_name='eventos', default=1)
-    categoria_secundaria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, related_name='eventos_secundarios', null=True, blank=True)  
-
+    faixa_etaria = models.CharField(max_length=5, default='Livre') # Ex: "+18", "Livre", "14"
+    foto = models.ImageField(upload_to='eventos_fotos/', null=True, blank=True)
+    tags = models.CharField(max_length=200, blank=True, default="")
+    tipo = models.CharField(max_length=20, choices=TIPO_CHOICES, default='Presencial')
+    
     faixa_etaria = models.CharField(
         max_length=20,
         choices=FaixaEtaria.choices,

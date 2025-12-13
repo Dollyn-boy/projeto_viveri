@@ -6,8 +6,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:Projeto_Viveri/pages/erro/feedback_screen.dart'; 
-import 'package:Projeto_Viveri/pages/FAQ/criar_pergunta_page.dart';
+import 'package:viveri/pages/erro/feedback_screen.dart';
+import 'package:viveri/pages/FAQ/criar_pergunta_page.dart';
 
 class Evento {
   final int id;
@@ -69,8 +69,12 @@ class Evento {
     double? lng;
     if (json['local'] is Map) {
       final l = json['local'];
-      lat = (l['latitude'] != null) ? double.tryParse(l['latitude'].toString()) : null;
-      lng = (l['longitude'] != null) ? double.tryParse(l['longitude'].toString()) : null;
+      lat = (l['latitude'] != null)
+          ? double.tryParse(l['latitude'].toString())
+          : null;
+      lng = (l['longitude'] != null)
+          ? double.tryParse(l['longitude'].toString())
+          : null;
     }
     return Evento(
       id: id,
@@ -152,8 +156,6 @@ class _EventoUnicoState extends State<EventoUnico> {
   GoogleMapController? mapController;
   final LatLng _initialPosition = const LatLng(-23.55052, -46.633308);
 
-
-
   @override
   void initState() {
     super.initState();
@@ -172,9 +174,10 @@ class _EventoUnicoState extends State<EventoUnico> {
     setState(() => isFavorito = v);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-          content: Text(v
-              ? 'Adicionado aos favoritos'
-              : 'Removido dos favoritos')),
+        content: Text(
+          v ? 'Adicionado aos favoritos' : 'Removido dos favoritos',
+        ),
+      ),
     );
   }
 
@@ -196,8 +199,9 @@ class _EventoUnicoState extends State<EventoUnico> {
   Future<void> fetchRemoteEvento() async {
     setState(() => loadingEvento = true);
     try {
-      final url =
-          Uri.parse('http://10.0.2.2:8000/api/eventos/${widget.eventoId}/');
+      final url = Uri.parse(
+        'http://10.0.2.2:8000/api/eventos/${widget.eventoId}/',
+      );
       final resp = await http.get(url);
       if (resp.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(resp.body);
@@ -242,19 +246,22 @@ class _EventoUnicoState extends State<EventoUnico> {
             situacao: remoteEvento!.situacao,
             reservasCount: (remoteEvento?.reservasCount ?? 0) + 1,
             interessadosCount: remoteEvento?.interessadosCount,
-            latitude: remoteEvento?.latitude,    
-            longitude: remoteEvento?.longitude,  
+            latitude: remoteEvento?.latitude,
+            longitude: remoteEvento?.longitude,
           );
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Inscrito com sucesso!')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Inscrito com sucesso!')));
       } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Erro ao se inscrever')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Erro ao se inscrever')));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Erro na conexão')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Erro na conexão')));
     }
   }
 
@@ -272,10 +279,11 @@ class _EventoUnicoState extends State<EventoUnico> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Container(
-            width: 40,
-            height: 40,
-            color: Colors.white30,
-            padding: const EdgeInsets.all(8.0)),
+          width: 40,
+          height: 40,
+          color: Colors.white30,
+          padding: const EdgeInsets.all(8.0),
+        ),
         const SizedBox(width: 12),
         Row(
           children: [
@@ -285,7 +293,7 @@ class _EventoUnicoState extends State<EventoUnico> {
               const SizedBox(width: 6),
               if (remoteEvento!.categoriaSecundaria != null)
                 _TagExemplo(texto: remoteEvento!.categoriaSecundaria!),
-            ]
+            ],
           ],
         ),
         const SizedBox(width: 12),
@@ -293,9 +301,10 @@ class _EventoUnicoState extends State<EventoUnico> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Text(title,
-                style: const TextStyle(
-                    fontSize: 22, fontWeight: FontWeight.bold)),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 2),
             Text(address, style: const TextStyle(fontSize: 14)),
             const SizedBox(height: 4),
@@ -303,32 +312,38 @@ class _EventoUnicoState extends State<EventoUnico> {
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: 5),
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.red,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                      remoteEvento?.faixaEtariaDisplay ?? "+18",
-                      style: const TextStyle(
-                          fontSize: 14, color: Colors.white)),
+                    remoteEvento?.faixaEtariaDisplay ?? "+18",
+                    style: const TextStyle(fontSize: 14, color: Colors.white),
+                  ),
                 ),
                 const SizedBox(width: 8),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(dateLine,
-                        style: const TextStyle(
-                            fontSize: 14, color: Colors.black)),
-                    Text(timeLine,
-                        style: const TextStyle(
-                            fontSize: 10, color: Colors.black)),
+                    Text(
+                      dateLine,
+                      style: const TextStyle(fontSize: 14, color: Colors.black),
+                    ),
+                    Text(
+                      timeLine,
+                      style: const TextStyle(fontSize: 10, color: Colors.black),
+                    ),
                   ],
                 ),
                 const SizedBox(width: 8),
-                Icon(isFavorito ? Icons.favorite : Icons.favorite_border,
-                    color: isFavorito ? Colors.red : null,
-                    size: 20),
+                Icon(
+                  isFavorito ? Icons.favorite : Icons.favorite_border,
+                  color: isFavorito ? Colors.red : null,
+                  size: 20,
+                ),
               ],
             ),
           ],
@@ -341,17 +356,20 @@ class _EventoUnicoState extends State<EventoUnico> {
               onPressed: () => _shareEvento(),
             ),
             IconButton(
-              icon: Icon(isFavorito ? Icons.favorite : Icons.favorite_border,
-                  color: isFavorito ? Colors.red : null),
+              icon: Icon(
+                isFavorito ? Icons.favorite : Icons.favorite_border,
+                color: isFavorito ? Colors.red : null,
+              ),
               onPressed: () => _setFavorito(!isFavorito),
             ),
             const SizedBox(width: 8),
             GestureDetector(
               onTap: () => Navigator.pop(context),
               child: Container(
-                  alignment: Alignment.topLeft,
-                  padding: const EdgeInsets.only(top: 12, right: 12),
-                  child: const Icon(Icons.arrow_back, size: 26)),
+                alignment: Alignment.topLeft,
+                padding: const EdgeInsets.only(top: 12, right: 12),
+                child: const Icon(Icons.arrow_back, size: 26),
+              ),
             ),
           ],
         ),
@@ -373,9 +391,10 @@ class _EventoUnicoState extends State<EventoUnico> {
         },
         backgroundColor: Colors.amber[400],
         child: Text(
-            (remoteEvento?.organizador.isNotEmpty ?? false)
-                ? remoteEvento!.organizador[0].toUpperCase()
-                : 'J'),
+          (remoteEvento?.organizador.isNotEmpty ?? false)
+              ? remoteEvento!.organizador[0].toUpperCase()
+              : 'J',
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -385,52 +404,72 @@ class _EventoUnicoState extends State<EventoUnico> {
             children: [
               const SizedBox(height: 20),
               if (remoteEvento != null)
-                Text(remoteEvento!.avisoFaixaEtaria,
-                    style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red))
+                Text(
+                  remoteEvento!.avisoFaixaEtaria,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
+                )
               else
                 const Text(
-                    "Proibida a entrada de menores de 18 anos, mesmo acompanhados dos pais e/ou responsáveis.",
-                    style: TextStyle(fontSize: 16)),
+                  "Proibida a entrada de menores de 18 anos, mesmo acompanhados dos pais e/ou responsáveis.",
+                  style: TextStyle(fontSize: 16),
+                ),
               const Divider(color: Colors.grey, thickness: 1, height: 20),
               if (remoteEvento != null)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("Categorias: ",
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.bold)),
-                    Text(remoteEvento!.categoriaFormatada,
-                        style: const TextStyle(fontSize: 14)),
+                    const Text(
+                      "Categorias: ",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      remoteEvento!.categoriaFormatada,
+                      style: const TextStyle(fontSize: 14),
+                    ),
                     const SizedBox(height: 16),
                   ],
                 ),
-              const Text("Descrição do Evento:",
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black)),
+              const Text(
+                "Descrição do Evento:",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
               const SizedBox(height: 5),
               if (loadingEvento)
                 const Center(child: CircularProgressIndicator())
               else if (remoteEvento != null)
-                Text(remoteEvento!.descricao,
-                    style: const TextStyle(fontSize: 16, color: Colors.black))
+                Text(
+                  remoteEvento!.descricao,
+                  style: const TextStyle(fontSize: 16, color: Colors.black),
+                )
               else
-                const Text("Descrição indisponível.",
-                    style: TextStyle(fontSize: 16, color: Colors.black)),
-              if (remoteEvento?.link != null &&
-                  (remoteEvento!.link.isNotEmpty))
+                const Text(
+                  "Descrição indisponível.",
+                  style: TextStyle(fontSize: 16, color: Colors.black),
+                ),
+              if (remoteEvento?.link != null && (remoteEvento!.link.isNotEmpty))
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("Para mais informações:",
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold)),
+                      const Text(
+                        "Para mais informações:",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       GestureDetector(
                         onTap: () async {
                           final uri = Uri.tryParse(remoteEvento!.link);
@@ -438,21 +477,27 @@ class _EventoUnicoState extends State<EventoUnico> {
                             await launchUrl(uri);
                           }
                         },
-                        child: Text(remoteEvento!.link,
-                            style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.blue,
-                                decoration: TextDecoration.underline)),
+                        child: Text(
+                          remoteEvento!.link,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.blue,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
               const Divider(color: Colors.grey, thickness: 1, height: 20),
-              const Text("Onde vai rolar?",
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black)),
+              const Text(
+                "Onde vai rolar?",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
               if (remoteEvento != null)
                 SizedBox(
                   width: double.infinity,
@@ -487,8 +532,10 @@ class _EventoUnicoState extends State<EventoUnico> {
                   height: 130,
                   color: Colors.grey,
                   child: const Center(
-                    child: Text("Mapa indisponível",
-                        style: TextStyle(fontSize: 16, color: Colors.black)),
+                    child: Text(
+                      "Mapa indisponível",
+                      style: TextStyle(fontSize: 16, color: Colors.black),
+                    ),
                   ),
                 ),
               const SizedBox(height: 20),
@@ -498,20 +545,26 @@ class _EventoUnicoState extends State<EventoUnico> {
                   Stack(
                     children: [
                       Positioned(
-                          left: 0,
-                          child: CircleAvatar(
-                              radius: 12,
-                              backgroundColor: Colors.grey[400])),
+                        left: 0,
+                        child: CircleAvatar(
+                          radius: 12,
+                          backgroundColor: Colors.grey[400],
+                        ),
+                      ),
                       Positioned(
-                          left: 15,
-                          child: CircleAvatar(
-                              radius: 12,
-                              backgroundColor: Colors.grey[500])),
+                        left: 15,
+                        child: CircleAvatar(
+                          radius: 12,
+                          backgroundColor: Colors.grey[500],
+                        ),
+                      ),
                       Positioned(
-                          left: 30,
-                          child: CircleAvatar(
-                              radius: 12,
-                              backgroundColor: Colors.grey[600])),
+                        left: 30,
+                        child: CircleAvatar(
+                          radius: 12,
+                          backgroundColor: Colors.grey[600],
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(width: 16),
@@ -519,21 +572,26 @@ class _EventoUnicoState extends State<EventoUnico> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                          "+ ${remoteEvento?.reservasCount ?? 60} pessoas já assistiram",
-                          style: const TextStyle(fontSize: 16)),
+                        "+ ${remoteEvento?.reservasCount ?? 60} pessoas já assistiram",
+                        style: const TextStyle(fontSize: 16),
+                      ),
                       Text(
-                          "+ ${remoteEvento?.interessadosCount ?? 100} pessoas interessadas",
-                          style: const TextStyle(fontSize: 16)),
+                        "+ ${remoteEvento?.interessadosCount ?? 100} pessoas interessadas",
+                        style: const TextStyle(fontSize: 16),
+                      ),
                     ],
-                  )
+                  ),
                 ],
               ),
               const SizedBox(height: 20),
-              const Text("Organizador",
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black)),
+              const Text(
+                "Organizador",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
               const SizedBox(height: 16),
               Row(
                 children: [
@@ -547,7 +605,9 @@ class _EventoUnicoState extends State<EventoUnico> {
                               ? remoteEvento!.organizador[0].toUpperCase()
                               : 'U',
                           style: const TextStyle(
-                              fontSize: 24, color: Colors.black),
+                            fontSize: 24,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                       Positioned(
@@ -559,11 +619,13 @@ class _EventoUnicoState extends State<EventoUnico> {
                           decoration: BoxDecoration(
                             color: Colors.green[600],
                             shape: BoxShape.circle,
-                            border:
-                                Border.all(color: Colors.white, width: 2),
+                            border: Border.all(color: Colors.white, width: 2),
                           ),
-                          child: const Icon(Icons.check,
-                              size: 12, color: Colors.white),
+                          child: const Icon(
+                            Icons.check,
+                            size: 12,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ],
@@ -573,20 +635,23 @@ class _EventoUnicoState extends State<EventoUnico> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                          remoteEvento?.organizador ??
-                              "Organizador não definido",
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold)),
+                        remoteEvento?.organizador ?? "Organizador não definido",
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       TextButton(
                         onPressed: () {
                           // Navegar para perfil do organizador
                         },
-                        child: const Text("Ver perfil",
-                            style: TextStyle(
-                                fontSize: 12, color: Colors.blue)),
+                        child: const Text(
+                          "Ver perfil",
+                          style: TextStyle(fontSize: 12, color: Colors.blue),
+                        ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
               const SizedBox(height: 20),
@@ -600,13 +665,17 @@ class _EventoUnicoState extends State<EventoUnico> {
                         height: 55,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                            color: Colors.green,
-                            borderRadius: BorderRadius.circular(12)),
-                        child: const Text("INSCREVER-SE",
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white)),
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Text(
+                          "INSCREVER-SE",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     ),
                     Positioned(
@@ -616,14 +685,19 @@ class _EventoUnicoState extends State<EventoUnico> {
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
-                            color: Colors.yellow[600],
-                            shape: BoxShape.circle),
+                          color: Colors.yellow[600],
+                          shape: BoxShape.circle,
+                        ),
                         child: const Center(
-                            child: Text("!",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white))),
+                          child: Text(
+                            "!",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -635,17 +709,24 @@ class _EventoUnicoState extends State<EventoUnico> {
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.help_outline,
-                          size: 20, color: Colors.grey),
+                      const Icon(
+                        Icons.help_outline,
+                        size: 20,
+                        color: Colors.grey,
+                      ),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => const CriarPerguntaPage(),
-                          ));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const CriarPerguntaPage(),
+                            ),
+                          );
                         },
-                        child: const Text("FAQ",
-                            style: TextStyle(
-                                fontSize: 16, color: Colors.grey)),
+                        child: const Text(
+                          "FAQ",
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
                       ),
                     ],
                   ),
@@ -655,13 +736,14 @@ class _EventoUnicoState extends State<EventoUnico> {
                       const Icon(Icons.warning, size: 16, color: Colors.grey),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => const FeedbackScreen(),
-                          ));
+                          // Navigator.push(context, MaterialPageRoute(
+                          //   builder: (context) => const FeedbackScreen(),
+                          // ));
                         },
-                        child: const Text("Algo errado?",
-                            style: TextStyle(
-                                fontSize: 16, color: Colors.grey)),
+                        child: const Text(
+                          "Algo errado?",
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
                       ),
                     ],
                   ),
@@ -685,11 +767,17 @@ class _TagExemplo extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: const BoxDecoration(
-          color: Colors.white30,
-          borderRadius: BorderRadius.all(Radius.circular(12))),
-      child: Text(texto,
-          style: const TextStyle(
-              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)),
+        color: Colors.white30,
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+      ),
+      child: Text(
+        texto,
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+      ),
     );
   }
 }
