@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class EventoDTO {
-  // Page 24 Data
   String? nome;
   String? tipo;
   String? frequencia;
@@ -13,16 +12,14 @@ class EventoDTO {
   TimeOfDay? horaFim;
   bool? privado;
 
-  // Page 25 Data
   String? localNome;
-  String? cep; // combining cep1 and cep2
+  String? cep; 
   String? endereco;
   String? capacidade;
   String? estacionamento;
   String? bife;
   String? quarto;
 
-  // Page 26 Data
   bool? eventoGratuito;
   String? nomeIngresso;
   String? valorIngresso;
@@ -36,17 +33,15 @@ class EventoDTO {
   bool? menorIdade;
   bool? estudantes;
 
-  // Page 27 Data
   String? nomeFotoLocal;
   String? pathFotoLocal;
   String? nomeFotoEstabelecimento;
   String? pathFotoEstabelecimento;
-  bool? temEstacionamento; // distinct from page 25's string radio?
+  bool? temEstacionamento; 
   bool? areaPet;
   bool? espacoKids;
   List<bool> formasPagamento = [false, false, false];
 
-  // Page 28 Data
   bool? temCupom;
   String? codigoCupom;
   String? valorCupom;

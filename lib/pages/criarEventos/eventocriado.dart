@@ -5,7 +5,6 @@ class EventoCriadoSucesso extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Definindo as cores do padrão
     const Color corFundo = Color(0xFFD6E0D2);
     const Color corTextoPrincipal = Color(0xFF284017);
     const Color corDestaque = Color.fromARGB(255, 189, 161, 109);       
