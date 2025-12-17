@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../criarEventos/widgets/app_bar.dart';
 import '../criarEventos/widgets/campo_texto.dart';
+import 'evento_dto.dart';
 
 class Descritivo24Page extends StatefulWidget {
   const Descritivo24Page({super.key});
@@ -10,6 +11,7 @@ class Descritivo24Page extends StatefulWidget {
 }
 
 class _CriarEventoPageState extends State<Descritivo24Page> {
+  final dto = EventoDTO();
   final nomeController = TextEditingController();
   final tipoController = TextEditingController();
   final frequenciaController = TextEditingController();
@@ -381,25 +383,44 @@ class _CriarEventoPageState extends State<Descritivo24Page> {
 
              const SizedBox(height: 30),
    
-            Center(
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF284017),
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4), 
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Populate DTO
+                    dto.nome = nomeController.text;
+                    dto.tipo = tipoController.text;
+                    dto.frequencia = frequenciaController.text;
+                    dto.faixaEtaria = faixaEtariaController.text;
+                    dto.descricao = descricaoController.text;
+                    dto.dataInicio = dataInicio;
+                    dto.horaInicio = horaInicio;
+                    dto.dataFim = dataFim;
+                    dto.horaFim = horaFim;
+                    dto.privado = privado;
+
+                    Navigator.pushNamed(
+                      context,
+                      '/criar-eventos-etapa-2',
+                      arguments: dto,
+                    );
+                    
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF284017),
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4), 
+                    ),
+                    elevation: 0, 
                   ),
-                  elevation: 0, 
-                ),
-                child: const Text(
-                  "Próximo", 
-                  style: TextStyle(
-                    color: Color(0xFFF4B134), 
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                  child: const Text(
+                    "Próximo", 
+                    style: TextStyle(
+                      color: Color(0xFFF4B134), 
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
               ),
             )
           ],

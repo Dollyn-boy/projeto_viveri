@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:viveri/pages/criarEventos/descritivo24_page.dart';
 import 'package:viveri/pages/criarEventos/descritivo25_page.dart';
+import 'package:viveri/pages/criarEventos/descritivo26_page.dart';
+import 'package:viveri/pages/criarEventos/descritivo27_page.dart';
+import 'package:viveri/pages/criarEventos/descritivo28_page.dart';
+import 'package:viveri/pages/criarEventos/eventocriado.dart';
 import 'package:viveri/pages/eventosCriados_e_Fav/Eventos_main.dart';
 import 'package:viveri/pages/home/home_page.dart';
 import 'package:viveri/pages/home/onboarding/onboard_page.dart';
@@ -65,6 +69,10 @@ class MyApp extends StatelessWidget {
         // EVENTOS
         '/criar-eventos-etapa-1': (context) => Descritivo24Page(),
         '/criar-eventos-etapa-2': (context) => Descritivo25Page(),
+        '/criar-eventos-etapa-3': (context) => Descritivo26Page(),
+        '/criar-eventos-etapa-4': (context) => Descritivo27Page(),
+        '/criar-eventos-etapa-5': (context) => Descritivo28Page(),
+        '/criar-eventos-sucesso': (context) => EventoCriadoSucesso(),
 
         '/eventos-criados': (context) => const MainEventsPage(),
         '/criar-pergunta': (context) => const CriarPerguntaPage(),

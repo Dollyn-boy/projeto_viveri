@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import '../criarEventos/widgets/app_bar.dart';
 import '../criarEventos/widgets/campo_texto.dart';
-
+import 'evento_dto.dart';
 
 class Descritivo25Page extends StatefulWidget {
-  const Descritivo25Page({super.key});
+  final EventoDTO eventoDTO;
+  Descritivo25Page({super.key, EventoDTO? eventoDTO}) : eventoDTO = eventoDTO ?? EventoDTO();
 
   @override
   State<Descritivo25Page> createState() => _CriarEventoPage2State();
 }
 
 class _CriarEventoPage2State extends State<Descritivo25Page> {
+  EventoDTO get dto => ModalRoute.of(context)?.settings.arguments as EventoDTO? ?? widget.eventoDTO;
+
   static const Color corFundo = Color(0xFFD6E0D2);
   static const Color corContainer = Color(0xFFE2E8DA);
   static const Color corTextoPrincipal = Color(0xFF284017);
@@ -196,7 +199,23 @@ class _CriarEventoPage2State extends State<Descritivo25Page> {
    
             Center(
               child: ElevatedButton(
-                onPressed: () {},
+                
+                onPressed: () {
+                    // Populate DTO
+                    dto.localNome = _nomeLocalController.text;
+                    dto.cep = "${_cep1Controller.text}-${_cep2Controller.text}";
+                    dto.endereco = _enderecoController.text;
+                    dto.capacidade = _capacidadeController.text;
+                    dto.estacionamento = estacionamento;
+                    dto.bife = bife;
+                    dto.quarto = quarto;
+
+                    Navigator.pushNamed(
+                      context,
+                      '/criar-eventos-etapa-3',
+                      arguments: dto,
+                    );    
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF284017),
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
