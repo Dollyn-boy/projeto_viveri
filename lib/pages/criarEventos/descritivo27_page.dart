@@ -15,7 +15,6 @@ class Descritivo27Page extends StatefulWidget {
 class _Descritivo27PageState extends State<Descritivo27Page> {
   EventoDTO get dto => ModalRoute.of(context)?.settings.arguments as EventoDTO? ?? widget.eventoDTO;
 
-  // --- Variáveis de Estado ---
   bool? estacionamento;
   bool? areaPet;
   bool? espacoKids;
@@ -108,7 +107,6 @@ class _Descritivo27PageState extends State<Descritivo27Page> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  // Populate DTO
                   dto.nomeFotoLocal = nomeFotoLocal;
                   dto.pathFotoLocal = pathFotoLocal;
                   dto.nomeFotoEstabelecimento = nomeFotoEstabelecimento;

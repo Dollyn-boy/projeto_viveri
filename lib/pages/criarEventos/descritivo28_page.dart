@@ -66,7 +66,6 @@ class _Descritivo28PageState extends State<Descritivo28Page> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                   // Populate DTO (Final Step)
                    dto.temCupom = cupom;
                    dto.codigoCupom = _codigoController.text;
                    dto.valorCupom = _valorController.text;

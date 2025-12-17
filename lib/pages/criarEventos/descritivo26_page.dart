@@ -126,7 +126,6 @@ class _Descritivo26PageState extends State<Descritivo26Page> {
                   const Text("Politicas:", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: corTextoPrincipal)),
                   const SizedBox(height: 15),
 
-                  // AQUI: Passamos as duas funções (uma pra mudar o nome, outra pra salvar o path)
                   _buildAnexarRow(
                     "Regras Gerais", 
                     nomeArquivoRegras, 
